@@ -81,31 +81,21 @@ const product = async (req, res) => {
   });
 };
 const comment = async (req, res) => {
-  try {
-    const checkEmail = req.session.email;
-    // Kiểm tra reCAPTCHA
-    const recaptchaToken = req.body["g-recaptcha-response"];
-    if (!recaptchaToken) {
-      return res
-        .status(400)
-        .json({ error: "Vui lòng xác nhận bạn không phải là robot" });
-    }
-    const secretKey = "6Lf7Uc4pAAAAAIgx7VrKot7yIBrP4w1rZii7_yrj";
+    const secretKey = "6LccLb8pAAAAAJp_4D7PjdZlQGQmPboq-PTpaDM2";
     const recaptchaVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
     const recaptchaResponse = await axios.post(recaptchaVerifyUrl);
     const recaptchaData = recaptchaResponse.data;
     if (!recaptchaData.success) {
       return res.status(400).json({ error: "reCAPTCHA không hợp lệ" });
     }
-
+    const { com_name, com_mail, com_body } = req.body;
+    const checkEmail = req.session.email;
     //kiểm tra đăng nhập
-    if (!checkEmail) {
-      return res.redirect(
-        `${req.path}?error=Bạn cần đăng nhập để có thể bình luận`
-      );
-    }
-    // Kiểm tra từ ngữ không phù hợp
-    let checkBody = body;
+        if (!checkEmail) {
+        return res.status(400).json({ error: "Bạn cần đăng nhập để có thể bình luận!" });
+        }
+    //so sánh word để gán ***
+    let checkBody = com_body;
     const obscenities = [
       "fuck",
       "shit",
@@ -120,21 +110,18 @@ const comment = async (req, res) => {
       "lol",
       "vãi đái",
     ];
-
-    //so sánh word để gán ***
     for (let word of obscenities) {
       checkBody = checkBody.replace(
         new RegExp(word, "gi"),
         "*".repeat(word.length)
       );
     }
-
     // Lưu comment vào cơ sở dữ liệu
     const commentData = {
       prd_id: req.params.id,
       email: com_mail,
       full_name: com_name,
-      body: checkComment,
+      body: checkBody,
     };
     await new CommentModel(commentData).save();
     req.flash(
@@ -143,10 +130,7 @@ const comment = async (req, res) => {
     );
     res.status(200).json({ redirectUrl: req.path });
     // res.redirect(req.path);
-  } catch (error) {
-    res.status(500).send("Internal server error");
-  }
-};
+  } ;
 // const comment = async (req, res) => {
 //     const { full_name, email, body} = req.body;
 //     const { id } = req.params;
