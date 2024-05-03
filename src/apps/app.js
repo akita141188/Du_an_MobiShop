@@ -38,7 +38,8 @@ app.use(
   shareMw.banners,
   shareMw.emailCustomer,
   shareMw.userValidate,
-)
+  shareMw.nameProducts,
+);
 // Sử dụng session middleware
 app.use(session({
   secret: 'your-secret-key',

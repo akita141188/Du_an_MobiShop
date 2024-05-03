@@ -84,30 +84,81 @@
           if (alertElement) {
             alertElement.style.display = 'none';
           }
-        }, 2000);
+        }, 3000);
       </script>
       <h3>Bình luận sản phẩm</h3>
       <% if(data && data.error){%>
       <div class="alert alert-danger"><%=data.error%></div>
       <%}%>
-      <form method="post" id="comment-form" action="/product-<%=product.slug%>.<%=product._id%>">
-      <div class="form-group">
-        <label>Tên:</label>
-        <input name="full_name" id="com-ful_name" required type="text" class="form-control" value="<%=full_name%>" <%= full_name ? 'readonly' : '' %>>
+      <form method="post" id="submitForm" >
+<div class="form-group">
+          <label>Tên:</label>
+          <input name="com_name"  id="com_name" required type="text" class="form-control" <input name="full_name" id="com-ful_name" required type="text" class="form-control" value="<%=full_name%>" <%= full_name ? 'readonly' : '' %>>
       </div>
       <div class="form-group">
-        <label>Email:</label>
-        <input name="email" id="com-email" required type="email" class="form-control" id="pwd" value="<%=email%>" <%= email ? 'readonly' : '' %>>
+          <label>Email:</label>
+          <input name="com_mail" id="com_mail" required type="email" class="form-control" id="pwd" value="<%=email%>" <%= email ? 'readonly' : '' %>>
       </div>
       <div class="form-group">
-        <label>Nội dung:</label>
-        <textarea name="body" id="com-body" required rows="8" class="form-control"></textarea>
+          <label>Nội dung:</label>
+          <textarea name="com_body" id="com_body" required rows="8" class="form-control"></textarea>
       </div>
-      <div class="g-recaptcha" data-sitekey="6LeywLopAAAAABJVuJbcXTaOBJd2ScL-3vJjpn89"></div>
-      <span id="error-message"></span>
-      <button type="submit" name="sbm" class="btn btn-primary">Gửi</button>
-      </form>
-    </div>
+      <div class="form-group">
+          <div class="g-recaptcha" data-sitekey="6LccLb8pAAAAAL3tsvTJNgZE24TPeli3KQONUBBC"></div>
+          <p id="error-message" style="color: red;"></p>
+      </div>
+      </div>
+      <div class="px-3">
+          <button type="submit"  name="sbm" class="btn btn-primary">Gửi</button>
+      </div>
+  </form>
+  <script>
+  // Lắng nghe sự kiện submit của form
+  document.getElementById("submitForm").addEventListener("submit", async function(event) {
+      event.preventDefault(); // Ngăn chặn việc gửi yêu cầu mặc định
+      // Kiểm tra reCAPTCHA
+      const recaptchaToken = grecaptcha.getResponse();
+      if (!recaptchaToken) {
+          document.getElementById("error-message").innerText = "Vui lòng xác nhận bạn không phải là robot";
+          return;
+      }
+      // Gửi yêu cầu POST đến máy chủ
+      try {
+          const currentUrl = window.location.href;
+          // Phân tích URL để lấy slug và id
+          const urlParts = currentUrl.split("/");
+          const parts = currentUrl.split("/product-");
+          const lastPart = parts[parts.length - 1];
+          const slugAndId = lastPart.split(".");
+          const slug =slugAndId[0];
+          const id = slugAndId[1];
+
+          // Tạo URL sử dụng slug và id
+          const url = `/product-${slug}.${id}`;
+          const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  com_name,
+                  com_mail,
+                  com_body,
+                  "g-recaptcha-response": recaptchaToken
+              })
+          });
+          const data = await response.json();
+          if (response.ok) {
+              window.location.href = data.redirectUrl;
+              } else {
+              document.getElementById("error-message").innerText = data.error;
+          }
+      } catch (error) {
+          console.error("Error:", error);
+          document.getElementById("error-message").innerText = "Lỗi kết nối";
+      }
+  });
+  </script>
   </div>
 
   <!--	End Comment	-->
@@ -151,81 +202,5 @@
 </ul>
 </div>
 </div>
-<script>
-  // gửi yêu cầu về server 
-  document.getElementById("submitForm").addEventListener("submit",async (e)=>{
-    e.preventDefault(); // Ngăn chặn việc gửi yêu cầu mặc định
-
-      // Kiểm tra captcha
-  const recaptchaToken = grecaptcha.response();
-  if(!recaptchaToken){
-    document.getElementById("error-message").innerText= " Vui lòng xác nhận bạn không phải robot";
-    return;
-  }
-
-  // Lấy dữ liệu đầu vào
-const com_full_name = document.getElementById("com-full_name").value;
-const com_email = document.getElementById("com-email").value;
-const com_body = document.getElementById("com-body").value;
- 
-      // phân tách url lấy ra slug và id
-  const currentUrl = window.location.href;
-  const urlPath = currentUrl.split("-") // lay ra duoc chuoi gom slug+id : ["slug.id"]
-  const slugAndId =urlPath[urlPath.length -1].split(".") // tach rieng duoc ["slug","id"]
-  const slug = slugAndId[0];
-  const id = slugAndId[1];
-  const url = `/product-${slug}.${id}`;
-  
-  const reponse = await fetch(url,{
-    method : "POST",
-    headers : {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      com_full_name,
-      com_email,
-      com_body,
-      "g-recaptcha-response": recaptchaToken
-    })
-  })
-  const data = reponse.json();
-  if(reponse.ok){
-    window.location.href = data.redirectUrl;
-  }else{
-    document.getElementById("error-message").innerText = data.err;
-  }
-  })
-    
-  // const xhr = XMLHttpRequest();
-  // xhr.open("POST",url);
-  // xhr.setRequestHeader("Content-Type", "application/json"); // gửi dạng dữ liệu trả về là JSON
-  //   // kiểm tra trạng thái  yêu cầu xhr.status trong (200-300)
-  // xhr.onload = ()=>{
-  //   if (xhr.status >= 200 && xhr.status < 300) {
-  //           const data = JSON.parse(xhr.responseText);
-  //           if (data.redirectUrl) {
-  //               window.location.href = data.redirectUrl;
-  //           } else {
-  //               document.getElementById("error-message").innerText = "Không tìm thấy URL chuyển hướng";
-  //           }
-  //       } else {
-  //           const errorData = JSON.parse(xhr.responseText);
-  //           document.getElementById("error-message").innerText = errorData.error || "Có lỗi xảy ra khi xử lý yêu cầu";
-  //       }
-  // };
-  // // kiểm tra kết nối
-  // xhr.onerror = ()=>{
-  //   console.error("err:", xhr.statusText);
-  //   document.getElementById("error-message").innerText = "Lỗi kết nối";
-  // }
-  // const formData = {
-    // com_full_name,
-    // com_email,
-    // com_body,
-    // "g-recaptcha-response": recaptchaToken
-  // }
-  // xhr.send(JSON.stringify(formData))
-  // }
-</script>
 <%- include("./layouts/sidebarSite")%>
       <%- include("./layouts/footerSite")%>
