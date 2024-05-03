@@ -10,6 +10,7 @@ router.get("/auth/google/callback", passport.authenticate("google", { failureRed
 router.get("/auth/facebook", passport.authenticate("facebook"));
 router.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/admin/login" }), SocialController.facebookCallback);
 
-
+router.get("/auth/github", passport.authenticate("github"));
+router.get("/auth/github/callback", passport.authenticate("github", { failureRedirect: "/admin/login" }), SocialController.githubCallback);
 
 module.exports = router;

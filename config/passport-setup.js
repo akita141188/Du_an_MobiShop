@@ -4,6 +4,7 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const UserModel = require("../src/apps/models/UserModel")
 const slug = require("slug")
 const dotenv = require("dotenv")
+const GitHubStrategy  = require("passport-github").Strategy;
 
 passport.serializeUser((user,done)=>{
     done(null,user)
@@ -39,7 +40,7 @@ passport.use(
             }
         })
     })
-)
+);
 
 passport.use(
     new FacebookStrategy({
@@ -67,4 +68,32 @@ passport.use(
         })
     }
 )
-)
+);
+
+passport.use(
+    new GitHubStrategy({
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: process.env.GITHUB_CALLBACK_URL,
+    },
+      function (accessToken, refreshToken, profile, done) {
+        UserModel.findOne({ socialId: profile.id }).then((currentUser) => {
+          if (currentUser) {
+            // kiểm tra nếu đã có user theo biến socialId: profile.id thì đăng nhập vào
+            done(null, currentUser)
+          } else {
+            // không có user tạo user mới
+            new UserModel({
+              provider: profile.provider,
+              socialId: profile.id,
+              email: profile.email || "github@gmail.com",
+              full_name: profile.username || "",
+              username: profile.username,
+              role: "admin",
+            }).save().then((newUser) => {
+              done(null, newUser)
+            })
+          }
+        })
+      }
+    ));
