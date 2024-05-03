@@ -46,14 +46,14 @@
 					<form role="form" method="post">
 						<fieldset>
 							<div class="form-group">
-								<input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+								<input class="form-control" placeholder="E-mail" name="email" type="email" autofocus value="<%=rememberEmail%>">
 							</div>
 							<div class="form-group">
-								<input class="form-control" placeholder="Mật khẩu" name="password" type="password" value="">
+								<input class="form-control" placeholder="Mật khẩu" name="password" type="password" value="<%=rememberPassword%>">
 							</div>
 							<div class="checkbox">
 								<label>
-									<input name="remember" type="checkbox" value="Remember Me">Nhớ tài khoản
+									<input name="remember" type="checkbox" value="true" <% if (rememberEmail) { %>checked<% } %>>Nhớ tài khoản
 								</label>
 							</div>
 							<button type="submit" class="btn btn-danger">Đăng nhập</button>
