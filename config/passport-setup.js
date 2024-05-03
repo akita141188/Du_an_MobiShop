@@ -8,13 +8,13 @@ require("dotenv").config()
 
 // Lưu trữ thông tin cơ bản khi đăng nhập thành công
 passport.serializeUser((user, done) => {
-  done(null, user.id)
+  done(null, user)
 })
 
 // Truy xuất thông tin người dùng
 passport.deserializeUser((id, done) => {
   UserModel.findById(id).then((user) => {
-    done(null, user.id)
+    done(null, user)
   })
 })
 
