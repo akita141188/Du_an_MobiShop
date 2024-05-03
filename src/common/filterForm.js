@@ -23,15 +23,19 @@ module.exports = (query) => {
     };
 
     const { allStock, inStock, outOfStock } = filterFormData.status;
+    console.log(outOfStock.is_stock);
     switch (query.is_stock) {
         case allStock.is_stock:
             allStock.active = "true";
+            
             break;
         case inStock.is_stock:
             inStock.active = "true";
+            filterFormData.find.is_stock = inStock.is_stock
             break;
         case outOfStock.is_stock:
             outOfStock.active = "true";
+            filterFormData.find.is_stock = outOfStock.is_stock
             break;
 
         default:

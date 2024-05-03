@@ -24,7 +24,7 @@
     <a href="/admin/products/create" class="btn btn-success">
       <i class="glyphicon glyphicon-plus"></i> Thêm sản phẩm
     </a>
-    <%if(userValidate.role == "admin"){%>
+    <%if(true){%>
     <button id="deleteSelected" class="btn btn-danger">Xóa</button>
     <%}%>
   </div>
@@ -90,7 +90,7 @@
       <td class="form-group">
         <a href="/admin/products/edit/<%=product._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
 
-        <%if(userValidate.role == "admin"){%>
+        <%if(true){%>
         <a href="javascript:void(0);" class="btn btn-danger" onclick="confirmDeleteOne('<%= product._id %>')"><i class="glyphicon glyphicon-remove"></i></a>
         <%}%>
           </td>

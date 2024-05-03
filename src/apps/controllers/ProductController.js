@@ -8,10 +8,10 @@ const fs = require("fs")
 const path = require("path")
 
 const index = async (req, res) => {
-    const filterFormData = filterForm(req.query);
     let find = {deleted: false}
     
     // form filter
+    let filterFormData = filterForm(req.query);
     if(filterFormData.find){
         find= {...find, ...filterFormData.find}
     }
@@ -49,6 +49,8 @@ const index = async (req, res) => {
     const limit = 10;
     const skip = page * limit - limit;
     let count = 1;
+
+
 
 
     const products = await ProductModel
