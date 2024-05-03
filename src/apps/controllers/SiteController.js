@@ -80,105 +80,54 @@ const product = async (req, res) => {
     successMessage: req.flash("successMessage"), // Lấy thông báo từ session (nếu có)
   });
 };
+  
 const comment = async (req, res) => {
-    const secretKey = "6LccLb8pAAAAAJp_4D7PjdZlQGQmPboq-PTpaDM2";
-    const recaptchaVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
-    const recaptchaResponse = await axios.post(recaptchaVerifyUrl);
-    const recaptchaData = recaptchaResponse.data;
-    if (!recaptchaData.success) {
-      return res.status(400).json({ error: "reCAPTCHA không hợp lệ" });
-    }
-    const { com_name, com_mail, com_body } = req.body;
+    const { full_name, email, body} = req.body;
+    const { id } = req.params;
     const checkEmail = req.session.email;
-    //kiểm tra đăng nhập
-        if (!checkEmail) {
-        return res.status(400).json({ error: "Bạn cần đăng nhập để có thể bình luận!" });
-        }
-    //so sánh word để gán ***
-    let checkBody = com_body;
-    const obscenities = [
-      "fuck",
-      "shit",
-      "wtf",
-      "dm",
-      "d.m",
-      "dmm",
-      "tsb",
-      "con chó",
-      "ngu",
-      "đần",
-      "lol",
-      "vãi đái",
-    ];
-    for (let word of obscenities) {
-      checkBody = checkBody.replace(
-        new RegExp(word, "gi"),
-        "*".repeat(word.length)
-      );
+
+    const recaptchaToken = req.body["g-recaptcha-response"];
+    if (!recaptchaToken) {
+        console.log("Vui lòng xác nhận bạn không phải là robot");
+              return res.redirect(`${req.path}?error=Vui lòng xác nhận bạn không phải là robot`)
+
     }
-    // Lưu comment vào cơ sở dữ liệu
-    const commentData = {
-      prd_id: req.params.id,
-      email: com_mail,
-      full_name: com_name,
-      body: checkBody,
-    };
-    await new CommentModel(commentData).save();
-    req.flash(
-      "successMessage",
-      "Bình luận của bạn đã được gửi thành công! Hiện đang chờ xét duyệt! Cám ơn bạn đã đóng góp ý kiến !"
-    );
-    res.status(200).json({ redirectUrl: req.path });
-    // res.redirect(req.path);
-  } ;
-// const comment = async (req, res) => {
-//     const { full_name, email, body} = req.body;
-//     const { id } = req.params;
-//     const checkEmail = req.session.email;
+    const secretKey = "LeywLopAAAAAFhfLU_rPZybwu_hnbI5gEEEgmVf";
+    const recaptchaUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
 
-//     const recaptchaToken = req.body["g-recaptcha-response"];
-//     if (!recaptchaToken) {
-//         console.log("Vui lòng xác nhận bạn không phải là robot");
-//         return res
-//             .status(400)
-//             .json({ err: "Vui lòng xác nhận bạn không phải là robot" });
-//     }
-//     const secretKey = "LeywLopAAAAAFhfLU_rPZybwu_hnbI5gEEEgmVf";
-//     const recaptchaUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
+    const response = await axios.post(recaptchaUrl);
+    const recaptchaData = response.data;
+    if (recaptchaData.success) {
+        console.log("reCAPTCHA không hợp lệ");
+         res
+            .status(400)
+            .json({ err: 'reCAPTCHA không hợp lệ' })
+        }
 
-//     const response = await axios.post(recaptchaUrl);
-//     const recaptchaData = response.data;
-//     if (recaptchaData.success) {
-//         console.log("reCAPTCHA không hợp lệ");
-//          res
-//             .status(400)
-//             .json({ err: 'reCAPTCHA không hợp lệ' })
-//         }
+    //kiểm tra đăng nhập
+    if (!checkEmail) {
+        return res.redirect(`${req.path}?error=Bạn cần đăng nhập để có thể bình luận`)
+    }
+    // if(response.data.success && response.data.score >= 0.5){
+    let checkBody = body;
+    const obscenities = ["fuck", "shit", "wtf", "dm", "d.m", "dmm", "tsb", "con chó", "ngu", "đần", "lol", "vãi đái"];
 
-//     //kiểm tra đăng nhập
-//     if (!checkEmail) {
-//         return res.redirect(`${req.path}?error=Bạn cần đăng nhập để có thể bình luận`)
-//     }
-//     // if(response.data.success && response.data.score >= 0.5){
-//     let checkBody = body;
-//     const obscenities = ["fuck", "shit", "wtf", "dm", "d.m", "dmm", "tsb", "con chó", "ngu", "đần", "lol", "vãi đái"];
+    //so sánh word để gán ***
+    for (let word of obscenities) {
+        checkBody = checkBody.replace(new RegExp(word, "gi"), "*".repeat(word.length))
+    }
+    const comment = {
+        prd_id: id,
+        full_name,
+        email,
+        body: checkBody,
+    }
+    await new CommentModel(comment).save();
+    req.flash("successMessage", "Bình luận của bạn đã được gửi thành công! Hiện đang chờ xét duyệt! Cám ơn bạn đã đóng góp ý kiến !");
+    return res.redirect(303,req.path);
+    // res.status(200).json({ redirectUrl: req.path });
 
-//     //so sánh word để gán ***
-//     for (let word of obscenities) {
-//         checkBody = checkBody.replace(new RegExp(word, "gi"), "*".repeat(word.length))
-//     }
-//     const comment = {
-//         prd_id: id,
-//         full_name,
-//         email,
-//         body: checkBody,
-//     }
-//     await new CommentModel(comment).save();
-//     req.flash("successMessage", "Bình luận của bạn đã được gửi thành công! Hiện đang chờ xét duyệt! Cám ơn bạn đã đóng góp ý kiến !");
-//     return res.redirect(303,req.path);
-//     // res.status(200).json({ redirectUrl: req.path });
-
-// }
+}
 
 const editComment = async (req, res) => {
   const { id } = req.params;
