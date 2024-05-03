@@ -99,9 +99,11 @@ const comment = async (req, res) => {
     const recaptchaToken = req.body["g-recaptcha-response"];
     if (!recaptchaToken) {
         console.log("Vui lòng xác nhận bạn không phải là robot");
-        return res
-            .status(400)
-            .json({ err: "Vui lòng xác nhận bạn không phải là robot" });
+        // return res
+        //     .status(400)
+        //     .json({ err: "Vui lòng xác nhận bạn không phải là robot" });
+        return res.redirect(`${req.path}?error=Vui lòng xác nhận bạn không phải là robot`)
+
     }
     const secretKey = "LeywLopAAAAAFhfLU_rPZybwu_hnbI5gEEEgmVf";
     const recaptchaUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
