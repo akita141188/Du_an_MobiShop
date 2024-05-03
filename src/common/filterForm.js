@@ -29,9 +29,11 @@ module.exports = (query) => {
             break;
         case inStock.is_stock:
             inStock.active = "true";
+            filterFormData.find.is_stock = inStock.is_stock
             break;
         case outOfStock.is_stock:
             outOfStock.active = "true";
+            filterFormData.find.is_stock = outOfStock.is_stock
             break;
 
         default:
