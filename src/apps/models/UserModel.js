@@ -16,18 +16,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    provider : {
-        type : String,
-        default : "local"
+    provider: {
+        type: String,
+        default: "local"
     },
     socialId: {
         type: String,
         default: null,
-      },
+    },
 
-},{
-        timestamps: true,
+}, {
+    timestamps: true,
 });
 
-const userModel = mongoose.model("Users",userSchema,"users");
+const userModel = mongoose.model("Users", userSchema, "users");
 module.exports = userModel;

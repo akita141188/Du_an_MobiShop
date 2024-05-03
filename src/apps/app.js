@@ -10,6 +10,7 @@ const cartMw = require("./middlewares/cartMw")
 const shareMw = require("./middlewares/shareMw");
 const flash = require('express-flash');
 const passport = require("passport")
+require("./../../config/passport-setup")
 
 require("dotenv").config();
 
@@ -20,6 +21,10 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: config.get("app.session_secure") }
 }))
+
+// passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.use(express.urlencoded({ extended: true })); // lay du lieu nguoi dung nhap vao tu form
@@ -53,11 +58,6 @@ app.use(flash());
 
 app.set("views", config.get("app.views_folder"));
 app.set("view engine", config.get("app.view_engine"))
-
-// passport
-app.use(passport.initialize());
-app.use(passport.session());
-
 
 
 app.use(require(`${__dirname}/../routers/web.js`));
