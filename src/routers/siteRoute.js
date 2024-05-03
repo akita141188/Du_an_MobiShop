@@ -17,4 +17,8 @@ router.get("/del-item-cart-:id",SiteController.delItemCart)
 router.get("/cart",SiteController.cart)
 router.post("/order",SiteController.order)
 router.get("/success",SiteController.success)
+router.get("/forget",SiteController.forgetPassword)
+router.post("/forget",SiteController.validateEmail)
+router.post("/forget/verify",SiteController.validateOtp)
+router.post("/forget/change",SiteController.changePassword)
 module.exports = router;

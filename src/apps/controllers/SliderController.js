@@ -79,7 +79,7 @@ const approved = async (req,res)=>{
     if(approvedSlider){
         await SliderModel.updateOne({_id:id},{$set : approvedSlider})
     }
-    return res.redirect("/admin/sliders")
+    return res.redirect("back")
 }
 
 module.exports = {

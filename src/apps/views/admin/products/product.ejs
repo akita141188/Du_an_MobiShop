@@ -18,14 +18,14 @@
     </div>
   </div>
   <%- include("../../shared/filterForm.ejs",{find,filterFormData,categories}) %>
-  
+
   <!--/.row-->
   <div id="toolbar" class="btn-group">
     <a href="/admin/products/create" class="btn btn-success">
       <i class="glyphicon glyphicon-plus"></i> Thêm sản phẩm
     </a>
     <%if(userValidate.role == "admin"){%>
-    <button id="deleteSelected" class="btn btn-danger">Xóa</button>
+    <button id="deleteSelected" class="btn btn-danger">Xóa nhiều mục</button>
     <%}%>
   </div>
 
@@ -96,6 +96,7 @@
           </td>
         </tr>
         <script>
+          // thay đổi kick thước ảnh
           const changeLargeImage = (productId, thumbnail) => {
               $(`#carousel${productId} .carousel-inner`).html(`<div class="carousel-item active"><img src="../Uploads/images/${thumbnail}" class="d-block mx-auto width="mx-auto" height="200 " w-50" alt="Large Slide"></div>`);
           }
