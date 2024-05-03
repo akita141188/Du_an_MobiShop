@@ -18,7 +18,7 @@ passport.deserializeUser((id,done)=>{
 passport.use(
     new GoogleStrategy({
         callbackURL :process.env.GOOGLE_CALLBACK_URL,
-        clientID : process.env.GOOGLE_CLIENT_SECRET,
+        clientID : process.env.GOOGLE_CLIENT_ID,
         clientSecret : process.env.GOOGLE_CLIENT_SECRET,
 
     },(accessToken,refreshToken,profile,done)=>{
