@@ -99,9 +99,7 @@ const comment = async (req, res) => {
 
     const recaptchaToken = req.body["g-recaptcha-response"];
     if (!recaptchaToken) {
-        // return res
-        //     .status(400)
-        //     .json({ err: "Vui lòng xác nhận bạn không phải là robot" });
+
             return res.redirect(`${req.path}?error=Vui lòng xác nhận bạn không phải là robot`)
 
     }
@@ -120,7 +118,6 @@ const comment = async (req, res) => {
     //kiểm tra đăng nhập
     if (!checkEmail) {
         return res.redirect(`${req.path}?error=Bạn cần đăng nhập để có thể bình luận`)
-        // return res.status(400).json({err: "Bạn cần đăng nhập để có thể bình luận"})
     }
     let checkBody = body;
     const obscenities = ["fuck", "shit", "wtf", "dm", "d.m", "dmm", "tsb", "con chó", "ngu", "đần", "lol", "vãi đái"];
