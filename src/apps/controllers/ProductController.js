@@ -20,7 +20,6 @@ const index = async (req, res) => {
     // tổng số sản phẩm khi tìm kiếm
     const find_total_products = await ProductModel.countDocuments(find);
 
-
     const multiData = [
         { title: "Còn Hàng", value: true },
         { title: "Hết Hàng", value: false },
