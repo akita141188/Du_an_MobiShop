@@ -96,6 +96,8 @@ const comment = async (req, res) => {
     const { full_name, email, body } = req.body;
     const { id } = req.params;
     const checkEmail = req.session.email;
+    const user = res.locals.user;
+    console.log(user);
 
     const recaptchaToken = req.body["g-recaptcha-response"];
     if (!recaptchaToken) {
@@ -116,7 +118,7 @@ const comment = async (req, res) => {
     }
 
     //kiểm tra đăng nhập
-    if (!checkEmail) {
+    if (!checkEmail && !user.full_name) {
         return res.redirect(`${req.path}?error=Bạn cần đăng nhập để có thể bình luận`)
     }
     let checkBody = body;
