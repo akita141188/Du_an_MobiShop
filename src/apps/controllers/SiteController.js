@@ -221,7 +221,7 @@ const addToCart = async (req, res) => {
         newItems.push({
             id,
             name: product.name,
-            thumbnail: product.thumbnail,
+            thumbnails: product.thumbnails,
             price: product.price,
             qty: parseInt(qty)
         })
@@ -357,7 +357,6 @@ const validateOtp = async (req,res)=>{
    const ValidOpt = req.session.optCode;
    const email = req.session.emailChanged;
    let error = "Mã Otp không chính xác"
-   console.log(ValidOpt);
    if(checkOtp != ValidOpt){
     return res.render("site/forgets/OTP",{data : {error},email})
    }else{
