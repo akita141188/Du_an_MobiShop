@@ -97,7 +97,6 @@ const comment = async (req, res) => {
     const { id } = req.params;
     const checkEmail = req.session.email;
     const user = res.locals.user;
-    console.log(user);
 
     const recaptchaToken = req.body["g-recaptcha-response"];
     if (!recaptchaToken) {
