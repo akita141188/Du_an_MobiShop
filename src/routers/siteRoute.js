@@ -21,4 +21,5 @@ router.get("/forget",SiteController.forgetPassword)
 router.post("/forget",SiteController.validateEmail)
 router.post("/forget/verify",SiteController.validateOtp)
 router.post("/forget/change",SiteController.changePassword)
+router.get("/forget/success",SiteController.forgetSuccess)
 module.exports = router;

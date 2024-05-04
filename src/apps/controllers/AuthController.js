@@ -81,15 +81,27 @@ const success = (req, res) => {
 
 //Đăng nhập
 const login = async (req, res) => {
-    res.render("admin/login", { data: {} })
+    let rememberEmail = "";
+    let rememberPassword = "";
+    // Kiểm tra xem cookie "rememberUser" có tồn tại không
+  const rememberUser = req.cookies.rememberUser;
+  if (rememberUser) {
+    // Nếu có, giải mã thông tin đăng nhập từ cookie và gán vào rememberEmail và rememberPassword
+    const { email, password } = JSON.parse(rememberUser);
+    rememberEmail = email;
+    rememberPassword = password;
+  }
+    res.render("admin/login", { data: {}, rememberEmail, rememberPassword  })
 };
 
 const postLogin = async (req, res) => {
 
-    let { email, password } = req.body;
+    let { email, password,remember  } = req.body;
     let error;
 
     const user = await UserModel.findOne({ email });
+    req.session.email = email;
+    req.session.password = password;
     if (!user) {
         error = "Email hoặc Password không đúng";
         return res.render("admin/login", { data: { error } });
@@ -99,6 +111,15 @@ const postLogin = async (req, res) => {
         error = "Password không đúng";
         return res.render("admin/login", { data: { error } });
     }
+
+    if (remember === "true") {
+        res.cookie("rememberUser", JSON.stringify({ email, password }), {
+          maxAge: 7 * 24 * 60 * 60 * 1000, // Thời gian tồn tại của cookie, ví dụ: 7 ngày
+          httpOnly: true, // Đảm bảo chỉ máy chủ có thể truy cập cookie này
+        });
+      } else {
+        res.clearCookie("rememberUser");
+      }
     req.session._id = user._id;
     req.session.email = email;
         return res.redirect("/admin/dashboard");

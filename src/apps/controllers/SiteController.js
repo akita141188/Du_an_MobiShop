@@ -388,7 +388,10 @@ const changePassword = async (req,res)=>{
 
     await CustomerModel.updateOne({ email: email }, { $set: newUser });
     delete req.session.emailChanged;
-    return res.redirect("/admin/customers/login")
+    return res.redirect("/forget/success")
+}
+const forgetSuccess = (req,res)=>{
+    res.render("site/forgets/success")
 }
 module.exports = {
     home,
@@ -409,6 +412,7 @@ module.exports = {
     validateEmail,
     validateOtp,
     changePassword,
+    forgetSuccess,
 }
 
 
