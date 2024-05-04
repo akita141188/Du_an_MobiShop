@@ -33,14 +33,14 @@
             </button>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="/admin/dashboard">Trang quản trị</a>
-              <a class="dropdown-item" href="#">Hồ sơ</a>
+              <a class="dropdown-item" href="/information">Hồ sơ</a>
               <a class="dropdown-item" href="/admin/logout">Đăng xuất</a>
             </div>
           <% } else if (customer && customer.email) { %>
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"><span style="color: rgb(8, 186, 76);">Khách hàng</span> <%= customer.email %>
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">Hồ sơ</a>
+              <a class="dropdown-item" href="/information">Hồ sơ</a>
               <a class="dropdown-item" href="/admin/customers/logout">Đăng xuất</a>
             </div>
           <% } %>

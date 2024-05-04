@@ -1,4 +1,4 @@
-const ProductModel = require("../models/ProductModel");
+    const ProductModel = require("../models/ProductModel");
 const UserModel = require("../models/UserModel")
 const CommentModel = require("../models/CommentModel")
 const OrderModel = require("../models/orderModel")
@@ -112,6 +112,7 @@ const postLogin = async (req, res) => {
         return res.render("admin/login", { data: { error } });
     }
 
+    
     if (remember === "true") {
         res.cookie("rememberUser", JSON.stringify({ email, password }), {
           maxAge: 7 * 24 * 60 * 60 * 1000, // Thời gian tồn tại của cookie, ví dụ: 7 ngày
