@@ -77,12 +77,11 @@ const success = (req, res) => {
 };
 
 //Đăng nhập
-const login = (req, res) => {
-  // Khởi tạo rememberEmail và rememberPassword mặc định là rỗng
-  let rememberEmail = "";
-  let rememberPassword = "";
 
-  // Kiểm tra xem cookie "rememberUser" có tồn tại không
+const login = async (req, res) => {
+    let rememberEmail = "";
+    let rememberPassword = "";
+    // Kiểm tra xem cookie "rememberUser" có tồn tại không
   const rememberUser = req.cookies.rememberUser;
   if (rememberUser) {
     // Nếu có, giải mã thông tin đăng nhập từ cookie và gán vào rememberEmail và rememberPassword
@@ -90,14 +89,18 @@ const login = (req, res) => {
     rememberEmail = email;
     rememberPassword = password;
   }
-  // Truyền rememberEmail và rememberPassword vào trang đăng nhập
-  res.render("admin/login", { data: {}, rememberEmail, rememberPassword });
+
+    res.render("admin/login", { data: {}, rememberEmail, rememberPassword  })
 };
 
 const postLogin = async (req, res) => {
-  try {
-    let { email, password, remember } = req.body;
+
+    let { email, password,remember  } = req.body;
+    let error;
+
     const user = await UserModel.findOne({ email });
+    req.session.email = email;
+    req.session.password = password;
     if (!user) {
       const error = "Tài khoản không tồn tại!";
       return res.render("admin/login", { data: { error } });
@@ -118,13 +121,19 @@ const postLogin = async (req, res) => {
     } else {
       res.clearCookie("rememberUser");
     }
+
+    if (remember === "true") {
+        res.cookie("rememberUser", JSON.stringify({ email, password }), {
+          maxAge: 7 * 24 * 60 * 60 * 1000, // Thời gian tồn tại của cookie, ví dụ: 7 ngày
+          httpOnly: true, // Đảm bảo chỉ máy chủ có thể truy cập cookie này
+        });
+      } else {
+        res.clearCookie("rememberUser");
+      }
     req.session._id = user._id;
     req.session.email = email;
     return res.redirect("/admin/dashboard");
-  } catch (error) {
-    console.error("Đã xảy ra lỗi trong quá trình đăng nhập:", error);
-    return res.status(500).send("Đã xảy ra lỗi trong quá trình đăng nhập");
-  }
+  } 
 };
 
 const logout = (req, res) => {

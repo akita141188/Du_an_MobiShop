@@ -96,6 +96,7 @@ const comment = async (req, res) => {
     const { full_name, email, body } = req.body;
     const { id } = req.params;
     const checkEmail = req.session.email;
+    const user = res.locals.user;
 
     const recaptchaToken = req.body["g-recaptcha-response"];
     if (!recaptchaToken) {
@@ -116,7 +117,7 @@ const comment = async (req, res) => {
     }
 
     //kiểm tra đăng nhập
-    if (!checkEmail) {
+    if (!checkEmail && !user.full_name) {
         return res.redirect(`${req.path}?error=Bạn cần đăng nhập để có thể bình luận`)
     }
     let checkBody = body;
@@ -220,7 +221,7 @@ const addToCart = async (req, res) => {
         newItems.push({
             id,
             name: product.name,
-            thumbnail: product.thumbnail,
+            thumbnails: product.thumbnails,
             price: product.price,
             qty: parseInt(qty)
         })
@@ -356,7 +357,6 @@ const validateOtp = async (req,res)=>{
    const ValidOpt = req.session.optCode;
    const email = req.session.emailChanged;
    let error = "Mã Otp không chính xác"
-   console.log(ValidOpt);
    if(checkOtp != ValidOpt){
     return res.render("site/forgets/OTP",{data : {error},email})
    }else{
@@ -388,7 +388,10 @@ const changePassword = async (req,res)=>{
 
     await CustomerModel.updateOne({ email: email }, { $set: newUser });
     delete req.session.emailChanged;
-    return res.redirect("/admin/customers/login")
+    return res.redirect("/forget/success")
+}
+const forgetSuccess = (req,res)=>{
+    res.render("site/forgets/success")
 }
 module.exports = {
     home,
@@ -409,6 +412,7 @@ module.exports = {
     validateEmail,
     validateOtp,
     changePassword,
+    forgetSuccess,
 }
 
 
