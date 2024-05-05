@@ -1,33 +1,39 @@
 const mongoose = require("../../common/database")();
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     email: {
-        type: String,
-        unique: true,
+      type: String,
+      unique: true,
     },
     password: {
-        type: String,
+      type: String,
     },
     role: {
-        type: String,
-        default: "Member",
+      type: String,
+      default: "Member",
     },
     full_name: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
-    provider : {
-        type : String,
-        default : "local"
+    provider: {
+      type: String,
+      default: "local",
     },
     socialId: {
-        type: String,
-        default: null,
-      },
+      type: String,
+      default: null,
+    },
+    avatar: {
+      type: String,
+      default: null,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-},{
-        timestamps: true,
-});
-
-const userModel = mongoose.model("Users",userSchema,"users");
+const userModel = mongoose.model("Users", userSchema, "users");
 module.exports = userModel;

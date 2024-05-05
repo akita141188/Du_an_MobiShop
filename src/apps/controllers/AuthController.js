@@ -134,7 +134,6 @@ const postLogin = async (req, res) => {
     req.session.email = email;
     return res.redirect("/admin/dashboard");
   } 
-};
 
 const logout = (req, res) => {
   req.user = null;
