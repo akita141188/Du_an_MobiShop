@@ -50,15 +50,16 @@ passport.use(
     },
     (accessToken,refreshToken,profile,done)=>{
         UserModel.findOne({socialId : profile.id}).then((currentUser)=>{
+            console.log(profile);
+
             if(currentUser){
                 done(null,currentUser)
-                console.log(profile);
             }else{
                 new UserModel({
                     provider : profile.provider,
                     socialId : profile.id,
                     email: profile.emails || "facebook@gmail.com",
-                    full_name: profile.displayName,
+                    full_name: profile.displayName,         
                     username: slug(profile.displayName, { replacement: "" }),
                     role: "admin",
                 }).save().then((newUser)=>{

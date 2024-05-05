@@ -132,10 +132,9 @@ const postLogin = async (req, res) => {
       }
     req.session._id = user._id;
     req.session.email = email;
+    // console.log(user);
     return res.redirect("/admin/dashboard");
   } 
-};
-
 const logout = (req, res) => {
   req.user = null;
   req.session.destroy();
