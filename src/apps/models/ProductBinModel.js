@@ -15,7 +15,6 @@ const productBinSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Categories",
         required: true,
-        // <%=category._id%>
     },
     price: {
         type: Number,

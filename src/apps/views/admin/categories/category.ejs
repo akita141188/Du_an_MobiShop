@@ -99,7 +99,7 @@
 	<script>
 		// hàm cảnh báo xóa   
 		const confirmDeleteOne = (categoryId) => {
-		  const confirmMsg = "Bạn có chắc muốn xóa Danh mục này?";
+		  const confirmMsg = "Bạn có chắc muốn xóa Danh mục này? Danh mục sẽ được chuyển về thùng rác";
 		  if (confirm(confirmMsg)) {
 			window.location.href = "/admin/Categories/delete/" + categoryId;
 			location.reload();

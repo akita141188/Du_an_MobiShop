@@ -79,14 +79,41 @@ const moveCategories = async (req, res) => {
             moveCategories.push(moveCategory)
         })
         await CategoryModel.insertMany(moveCategories);
-        await CategoryBinModel.deleteMany({ _id: { $in: categoryIds }, move_to_user: true })
+        await CategoryBinModel.deleteMany({ _id: { $in: categoryIds }, move_to_category: true })
+
+        const productsMove = await ProductBinModel.find({ cat_id: {$in:categoryIds } })
+        if (productsMove.length > 0) {
+            const moveProducts = [];
+            productsMove?.map(product => {
+                const productData = product.toObject();
+                const thumbnails = productData.thumbnails;
+                for (const thumbnail of thumbnails) {
+                    const oldImagePath = path.join(__dirname, "../../public/Uploads/images", thumbnail);
+                    const newImagePath = path.join(__dirname, "../../public/Uploads/images/products", path.basename(thumbnail));
+                    fs.renameSync(oldImagePath, newImagePath);
+                }
+                const newThumbnails = thumbnails.map(thumbnail => `products/${path.basename(thumbnail)}`);
+    
+                const moveProduct = {
+                    ...product.toObject(),
+                    move_to_product: true,
+                    thumbnails: newThumbnails
+                }
+                moveProducts.push(moveProduct);
+            })
+            await ProductModel.insertMany(moveProducts)
+            await ProductBinModel.deleteMany({ cat_id: { $in: categoryIds }, move_to_product: true })
+    
+        }
+
+
     }
     return res.redirect("/admin/recycle_bin/categories")
 }
 const delAllCategories = async (req, res) => {
     const { checkedIds } = req.body;
     await CategoryBinModel.deleteMany({ _id: { $in: checkedIds } });
-    const productsToMove = await ProductModel.find({ cat_id: { $in: checkedIds } });
+    const productsToMove = await ProductBinModel.find({ cat_id: { $in: checkedIds } });
     if (productsToMove.length > 0) {
         const updateProducts = [];
         productsToMove?.map(product => {
@@ -106,7 +133,7 @@ const delAllCategories = async (req, res) => {
             updateProducts.push(updateProduct)
         })
         await RootModel.insertMany(updateProducts)
-        await ProductModel.deleteMany({ cat_id: { $in: checkedIds }, move_to_root: true }) // xóa tất cả sản phẩm có cat_id = id và gắn true;
+        await ProductBinModel.deleteMany({ cat_id: { $in: checkedIds }, move_to_root: true }) // xóa tất cả sản phẩm có cat_id = id và gắn true;
     }
 
     return res.redirect("/admin/recycle_bin/categories")
