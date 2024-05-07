@@ -8,7 +8,7 @@ const pagination = require("../../common/pagination")
 const ejs = require("ejs");
 const transporter = require("../../common/transporter");
 const path = require("path");
-const oderModel = require("../models/orderModel");
+const OrderModel = require("../models/orderModel");
 const _ = require("lodash");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
@@ -63,7 +63,6 @@ const product = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 3;
     const skip = page * limit - limit;
-
     const totalRows = await CommentModel
         .find({ prd_id: id })
         .sort({ _id: -1 })
@@ -274,6 +273,7 @@ const order = async (req, res) => {
     const items = req.session.cart;
     const checkEmail = req.session.email; // lấy email từ session
     const { body } = req;
+    // const user = req.locals.user;
     const total_price = items.reduce((total, item) => total + item.price * item.qty, 0)
     const viewFolder = req.app.get("views");
     const html = await ejs.renderFile(path.join(viewFolder, "/site/email-order.ejs"), {
@@ -281,7 +281,6 @@ const order = async (req, res) => {
         items
     }
     );
-
     if (!checkEmail && checkEmail !== body.email) {    /// kiểm tra nếu ko có email lưu session và checkmail khác email người dùng nhập vào từ form
         error = "Bạn cần đăng nhập để có thể mua hàng!";
         return res.render("site/cart", { data: { error } })
@@ -308,7 +307,7 @@ const order = async (req, res) => {
         })),
         total_price,
     }
-    await oderModel(newOrder).save();
+    await OrderModel(newOrder).save();
     req.session.cart = [];
     return res.redirect("/success")
 }
@@ -393,6 +392,28 @@ const changePassword = async (req,res)=>{
 const forgetSuccess = (req,res)=>{
     res.render("site/forgets/success")
 }
+
+const information = async(req,res)=>{
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = page * limit - limit;
+    let count = 1;
+    const totalRows = await OrderModel.find().countDocuments();
+    const totalPages = Math.ceil(totalRows / limit);
+
+    const orders = await OrderModel
+        .find()
+        .sort({ _id: -1 })
+        .skip(skip)
+        .limit(limit);
+    res.render("site/information",{
+        orders,
+        count,
+        totalPages,
+        page,
+        pages : pagination(page,limit,totalRows)
+    })
+}
 module.exports = {
     home,
     category,
@@ -413,6 +434,7 @@ module.exports = {
     validateOtp,
     changePassword,
     forgetSuccess,
+    information,
 }
 
 

@@ -17,6 +17,9 @@
       <h1 class="page-header">Danh sách đơn hàng</h1>
     </div>
   </div>
+  <div id="deleteAlert" class="alert alert-danger" style="display: none; text-align: center; font-size: 20px;">
+    Không có mục nào được chọn để xóa.
+  </div>
   <!--/.row-->
   <div id="toolbar" class="btn-group">
     <%if(userValidate.role == "admin"){%>
@@ -44,98 +47,117 @@
             </thead>
             <tbody>
               <% for (let order of orders) { %>
-              <% for (let orderDetail of order.items) { %>
-              <tr>
-                <% if (orderDetail == order.items[0]) { %>
-                <td rowspan="<%= order.items.length %>">
-                  <input type="checkbox" class="myCheckbox" data-id="<%= order._id.toString() %>">
-                </td>
-                <td rowspan="<%= order.items.length %>"><%=count++%></td>
-                <td rowspan="<%= order.items.length %>">
-                  <ul>
-                    <li>Họ tên: <%= order.full_name %></li>
-                    <li>Phone: <%= order.phone %></li>
-                    <li>Address: <%= order.address %></li>
-                    <li>Email: <%= order.email %></li>
-                  </ul>
+    <% for (let orderDetail of order.items) { %>
+    <tr>
+      <% if (orderDetail == order.items[0]) { %>
+      <td rowspan="<%= order.items.length %>">
+        <input type="checkbox" class="myCheckbox" data-id="<%= order._id.toString() %>">
+      </td>
+      <td rowspan="<%= order.items.length %>"><%=count++%></td>
+      <td rowspan="<%= order.items.length %>">
+        <ul>
+          <li>Họ tên: <%= order.full_name %></li>
+          <li>Phone: <%= order.phone %></li>
+          <li>Address: <%= order.address %></li>
+          <li>Email: <%= order.email %></li>
+        </ul>
+      </td>
+      <% } %>
+      <td><span><%= orderDetail.name %></span></td>
+      <td><span><%= orderDetail.qty %></span></td>
+      <td><span><%= formatPrice(orderDetail.price) %></span></td>
+      <% if (orderDetail == order.items[0]) { %>
+      <td rowspan="<%= order.items.length %>"><span><%= formatPrice(order.total_price) %></span></td>
+      <td rowspan="<%= order.items.length %>" class="form-group">
+        <%if(userValidate.role == "admin"){%>
+        <a href="javascript:void(0);" class="btn btn-danger" onclick="confirmDeleteOne('<%= order._id %>')"><i class="glyphicon glyphicon-remove"></i></a>
+        <%}%>
                 </td>
                 <% } %>
-                <td><span><%= orderDetail.name %></span></td>
-                <td><span><%= orderDetail.qty %></span></td>
-                <td><span><%= formatPrice(orderDetail.price) %></span></td>
-                <% if (orderDetail == order.items[0]) { %>
-                <td rowspan="<%= order.items.length %>"><span><%= formatPrice(order.total_price) %></span></td>
-                <td rowspan="<%= order.items.length %>" class="form-group">
-                  <%if(userValidate.role == "admin"){%>
-                  <a href="javascript:void(0);" class="btn btn-danger" onclick="confirmDeleteOne('<%= order._id %>')"><i class="glyphicon glyphicon-remove"></i></a>
-                  <%}%>
-                </td>
-                <% } %>
-                <td>
-                  <!-- Add action buttons here if needed -->
-                </td>
-              </tr>
-              <% } %>
-              <script>
-                // bắt sự kiện Thay đổi trạng thái checkbox
-                document.querySelectorAll(".myCheckbox").forEach(checkbox => {
-                  checkbox.addEventListener("change", () => {
-                    updateCheckedIds();
-                  });
-                });
+      <td>
+        <!-- Add action buttons here if needed -->
+      </td>
+    </tr>
+    <% } %>
+    <script>
+      // bắt sự kiện Thay đổi trạng thái checkbox
+      document.querySelectorAll(".myCheckbox").forEach(checkbox => {
+        checkbox.addEventListener("change", () => {
+          updateCheckedIds();
+        });
+      });
 
-                // Update trạng thái checkbox
-                const updateCheckedIds = () => {
-                  const checkedIds = [];
-                  document.querySelectorAll(".myCheckbox:checked").forEach(checkbox => {
-                    checkedIds.push(checkbox.getAttribute("data-id"));
-                  });
-                  sendCheckedIds(checkedIds);
-                }
-                // Gửi yêu cầu về server (AJAX)
-                const sendCheckedIds = (checkedIds) => {
-                  const xhr = new XMLHttpRequest();
-                  xhr.open("POST", "/admin/orders/deleteAll", true); // open() nhận vào 3 tham số (phương thức, url xử lý, async). true: bất đồng bộ
-                  xhr.setRequestHeader("Content-Type", "application/json"); // dữ liệu gửi về dạng JSON
-                  xhr.send(JSON.stringify({
-                    checkedIds: checkedIds
-                  }));
-                }
+      // Update trạng thái checkbox
+      const updateCheckedIds = () => {
+        const checkedIds = [];
+        document.querySelectorAll(".myCheckbox:checked").forEach(checkbox => {
+          checkedIds.push(checkbox.getAttribute("data-id"));
+        });
+        sendCheckedIds(checkedIds);
+      }
+      // Gửi yêu cầu về server (AJAX)
+      const sendCheckedIds = (checkedIds) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/admin/orders/deleteAll", true); // open() nhận vào 3 tham số (phương thức, url xử lý, async). true: bất đồng bộ
+        xhr.setRequestHeader("Content-Type", "application/json"); // dữ liệu gửi về dạng JSON
+        xhr.send(JSON.stringify({
+          checkedIds: checkedIds
+        }));
+      }
 
-                // Thêm hàm hiển thị hộp thoại xác nhận
-                const confirmDelete = () => {
-                  return confirm("Bạn có chắc chắn muốn xóa các bình luận đã chọn?");
-                }
+      // Thêm hàm hiển thị hộp thoại xác nhận
+      const confirmDelete = () => {
+        return confirm("Bạn có chắc chắn muốn xóa các bình luận đã chọn?");
+      }
 
-                // Bắt sự kiện click nút Xóa đã chọn
-                document.getElementById("deleteSelected").addEventListener("click", () => {
-                  if (confirmDelete()) { // Nếu người dùng xác nhận muốn xóa
-                    updateCheckedIds();
-                    location.reload(); // sau khi xóa reload trang
-                  }
-                });
-              </script>
-              <% } %>
-            </tbody>
-          </table>
+      // hiển thị thông báo khi xóa ko checked
+      const showDeleteAlert = () => {
+        const deleteAlert = document.getElementById("deleteAlert");
+        deleteAlert.style.display = "block";
 
-        </div>
-        <div class="panel-footer">
-          <nav aria-label="Page navigation example">
-            <ul class="pagination">
-              <%if(page>1){%>
-              <li class="page-item"><a class="page-link" href="/admin/orders?page=<%=page-1%>">&laquo;</a></li>
-              <%}%>
+        // Ẩn thông báo sau một khoảng thời gian
+        setTimeout(() => {
+          deleteAlert.style.display = "none";
+        }, 1000); // 3 giây
+      };
+
+      // Bắt sự kiện click nút Xóa đã chọn
+      document.getElementById("deleteSelected").addEventListener("click", () => {
+        const checkedCheckboxes = document.querySelectorAll(".myCheckbox:checked");
+
+        if (checkedCheckboxes.length === 0) {
+          // Nếu không có mục nào được chọn, hiển thị thông báo
+          showDeleteAlert();
+        } else {
+          // Nếu có mục được chọn, xác nhận hành động xóa
+          if (confirmDelete()) {
+            updateCheckedIds();
+            location.reload(); // sau khi xóa reload trang
+          }
+        }
+      });
+    </script>
+    <% } %>
+    </tbody>
+    </table>
+
+  </div>
+  <div class="panel-footer">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <%if(page>1){%>
+        <li class="page-item"><a class="page-link" href="/admin/orders?page=<%=page-1%>">&laquo;</a></li>
+        <%}%>
                                 <%for(let num of pages){%>
-              <%if(num==="..."){%>
-              <li class="page-item <%=page===num?'active':''%>"><span><%=num %></span></li>
-              <%} else {%>
-              <li class="page-item <%=page===num?'active':''%>"><a class="page-link" href="/admin/orders?page=<%=num%>"><%=num %></a></li>
-              <%}%>
+        <%if(num==="..."){%>
+        <li class="page-item <%=page===num?'active':''%>"><span><%=num %></span></li>
+        <%} else {%>
+        <li class="page-item <%=page===num?'active':''%>"><a class="page-link" href="/admin/orders?page=<%=num%>"><%=num %></a></li>
+        <%}%>
                                 <%}%>
-              <%if(page < totalPages){%>
-              <li class="page-item"><a class="page-link" href="/admin/orders?page=<%=page+1%>">&raquo;</a></li>
-              <%}%>
+        <%if(page < totalPages){%>
+        <li class="page-item"><a class="page-link" href="/admin/orders?page=<%=page+1%>">&raquo;</a></li>
+        <%}%>
                             </ul>
                         </nav>                    </div>
 				</div>

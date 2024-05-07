@@ -1,27 +1,34 @@
 <%- include("../layout/head",{title:"Users Manager"})%>
 <%- include("../layout/header")%>
 <%- include("../layout/sidebar")%>
-		
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
-		<div class="row">
-			<ol class="breadcrumb">
-				<li><a href="/admin/dashboard"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
-				<li class="active">Danh sách thành viên</li>
-			</ol>
-		</div><!--/.row-->
-		
-		<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">Danh sách thành viên</h1>
-			</div>
-		</div><!--/.row-->
-		<div id="toolbar" class="btn-group">
-      <%if(userValidate.role == "admin"){%>
-            <a href="/admin/users/create" class="btn btn-success">
-                <i class="glyphicon glyphicon-plus"></i> Thêm thành viên
-            </a>
-            <button id="deleteSelected" class="btn btn-danger">Xóa</button>
-      <%}%>
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+  <div class="row">
+    <ol class="breadcrumb">
+      <li><a href="/admin/dashboard"><svg class="glyph stroked home">
+            <use xlink:href="#stroked-home"></use>
+          </svg></a></li>
+      <li class="active">Danh sách thành viên</li>
+    </ol>
+  </div>
+  <!--/.row-->
+
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">Danh sách thành viên</h1>
+    </div>
+  </div>
+  <!--/.row-->
+  <div id="deleteAlert" class="alert alert-danger" style="display: none; text-align: center; font-size: 20px;">
+    Không có mục nào được chọn để xóa.
+  </div>
+  <div id="toolbar" class="btn-group">
+    <%if(userValidate.role == "admin"){%>
+    <a href="/admin/users/create" class="btn btn-success">
+      <i class="glyphicon glyphicon-plus"></i> Thêm thành viên
+    </a>
+    <button id="deleteSelected" class="btn btn-danger">Xóa nhiều mục</button>
+    <%}%>
         </div>
 		<div class="row">
 			<div class="col-lg-12">
@@ -44,25 +51,25 @@
                             </thead>
                             <tbody>
                                 <% for(let user of users) {%>
-                                <tr>
-                                    <td><input type="checkbox" class="myCheckbox" data-id="<%= user._id %>"></td>
-                                    <td><%=count++%></td>
-                                    <td><%= user.provider %></td>
-                                    <td><%=user.full_name%></td>
-                                    <td><%=user.email%></td>
-                                    <td><span class="label label-<%=user.role=='admin'?'danger':'success'%>"><%=user.role%></span></td>
-                                    <td class="form-group">
-                                      <%if(userValidate.role == "admin"){%>
-                                        <a href="/admin/users/edit/<%=user._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                        <a  href="javascript:void(0);" class="btn btn-danger" onclick="confirmDeleteOne('<%= user._id %>')"><i class="glyphicon glyphicon-remove"></i></a>
-                                        <%}else{%>
-                                          <%if(userValidate.id == user.id){%>
-                                          <a href="/admin/users/edit/<%=user._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+    <tr>
+      <td><input type="checkbox" class="myCheckbox" data-id="<%= user._id %>"></td>
+      <td><%=count++%></td>
+      <td><%= user.provider %></td>
+      <td><%=user.full_name%></td>
+      <td><%=user.email%></td>
+      <td><span class="label label-<%=user.role=='admin'?'danger':'success'%>"><%=user.role%></span></td>
+      <td class="form-group">
+        <%if(userValidate.role == "admin"){%>
+        <a href="/admin/users/edit/<%=user._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+        <a href="javascript:void(0);" class="btn btn-danger" onclick="confirmDeleteOne('<%= user._id %>')"><i class="glyphicon glyphicon-remove"></i></a>
+        <%}else{%>
+        <%if(userValidate.id == user.id){%>
+        <a href="/admin/users/edit/<%=user._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+        <%}%>
                                           <%}%>
-                                          <%}%>
-                                    </td>
-                                </tr>
-                                <%}%>
+      </td>
+    </tr>
+    <%}%>
                             </tbody>
 						</table>
                     </div>
@@ -70,18 +77,18 @@
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">
                                 <% if(page >1 ) {%>
-                                <li class="page-item"><a class="page-link" href="/admin/users?page=<%=page-1%>">&laquo;</a></li>
-                                <%}%>
+    <li class="page-item"><a class="page-link" href="/admin/users?page=<%=page-1%>">&laquo;</a></li>
+    <%}%>
                                 <%for(let CurrentPage of pages){%>
-                                    <%if(CurrentPage==="..."){%>
-                                        <li class="page-item <%=page===CurrentPage?'active':''%>"><span><%=CurrentPage %></span></li>
-                                    <%} else {%>
-                                        <li class="page-item <%=page===CurrentPage?'active':''%>"><a class="page-link" href="/admin/users?page=<%=CurrentPage%>"><%=CurrentPage %></a></li>
-                                        <%}%>
+    <%if(CurrentPage==="..."){%>
+    <li class="page-item <%=page===CurrentPage?'active':''%>"><span><%=CurrentPage %></span></li>
+    <%} else {%>
+    <li class="page-item <%=page===CurrentPage?'active':''%>"><a class="page-link" href="/admin/users?page=<%=CurrentPage%>"><%=CurrentPage %></a></li>
+    <%}%>
                                 <%}%>
-                                <% if(page < totalPages){%>
-                                <li class="page-item"><a class="page-link" href="/admin/users?page=<%=page+1%>">&raquo;</a></li>
-                                <%}%>
+    <% if(page < totalPages){%>
+    <li class="page-item"><a class="page-link" href="/admin/users?page=<%=page+1%>">&raquo;</a></li>
+    <%}%>
                             </ul>
                         </nav>
                     </div>
@@ -127,15 +134,34 @@
           const confirmDelete = () => {
             return confirm("Bạn có chắc chắn muốn xóa các User đã chọn? User sẽ được chuyển đến thùng rác.");
           }
-          // Bắt thuộc tính click Xóa
-          document.getElementById("deleteSelected").addEventListener("click", () => {
-            if (confirmDelete()) { // Nếu người dùng xác nhận muốn xóa
-              updateCheckedIds();
-              location.reload(); // sau khi xóa reload trang
-            }
-          });
+// hiển thị thông báo khi xóa ko checked
+const showDeleteAlert = () => {
+        const deleteAlert = document.getElementById("deleteAlert");
+        deleteAlert.style.display = "block";
+
+        // Ẩn thông báo sau một khoảng thời gian
+        setTimeout(() => {
+          deleteAlert.style.display = "none";
+        }, 1000); // 3 giây
+      };
+
+      // Bắt sự kiện click nút Xóa đã chọn
+      document.getElementById("deleteSelected").addEventListener("click", () => {
+        const checkedCheckboxes = document.querySelectorAll(".myCheckbox:checked");
+
+        if (checkedCheckboxes.length === 0) {
+          // Nếu không có mục nào được chọn, hiển thị thông báo
+          showDeleteAlert();
+        } else {
+          // Nếu có mục được chọn, xác nhận hành động xóa
+          if (confirmDelete()) {
+            updateCheckedIds();
+            location.reload(); // sau khi xóa reload trang
+          }
+        }
+      });
 	  </script>
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-table.js"></script>	
-    <%- include("../layout/footer")%>		
+    <%- include("../layout/footer")%>
