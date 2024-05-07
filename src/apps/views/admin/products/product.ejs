@@ -20,6 +20,9 @@
   <%- include("../../shared/filterForm.ejs",{find,filterFormData,categories}) %>
 
   <!--/.row-->
+  <div id="deleteAlert" class="alert alert-danger" style="display: none; text-align: center; font-size: 20px;">
+    Không có mục nào được chọn để xóa.
+  </div>
   <div id="toolbar" class="btn-group">
     <a href="/admin/products/create" class="btn btn-success">
       <i class="glyphicon glyphicon-plus"></i> Thêm sản phẩm
@@ -129,13 +132,33 @@
           const confirmDelete = () => {
             return confirm("Bạn có chắc chắn muốn xóa các sản phẩm đã chọn? Sản phẩm sẽ được chuyển đến thùng rác.");
           }
-          // Bắt thuộc tính click Xóa
-          document.getElementById("deleteSelected").addEventListener("click", () => {
-            if (confirmDelete()) { // Nếu người dùng xác nhận muốn xóa
-              updateCheckedIds();
-              location.reload(); // sau khi xóa reload trang
-            }
-          });
+          
+// hiển thị thông báo khi xóa ko checked
+const showDeleteAlert = () => {
+        const deleteAlert = document.getElementById("deleteAlert");
+        deleteAlert.style.display = "block";
+
+        // Ẩn thông báo sau một khoảng thời gian
+        setTimeout(() => {
+          deleteAlert.style.display = "none";
+        }, 1000); // 3 giây
+      };
+
+      // Bắt sự kiện click nút Xóa đã chọn
+      document.getElementById("deleteSelected").addEventListener("click", () => {
+        const checkedCheckboxes = document.querySelectorAll(".myCheckbox:checked");
+
+        if (checkedCheckboxes.length === 0) {
+          // Nếu không có mục nào được chọn, hiển thị thông báo
+          showDeleteAlert();
+        } else {
+          // Nếu có mục được chọn, xác nhận hành động xóa
+          if (confirmDelete()) {
+            updateCheckedIds();
+            location.reload(); // sau khi xóa reload trang
+          }
+        }
+      });
         </script>
         <script>
           // hàm cảnh báo xóa   

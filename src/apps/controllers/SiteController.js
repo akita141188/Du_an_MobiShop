@@ -8,7 +8,7 @@ const pagination = require("../../common/pagination")
 const ejs = require("ejs");
 const transporter = require("../../common/transporter");
 const path = require("path");
-const oderModel = require("../models/orderModel");
+const OrderModel = require("../models/orderModel");
 const _ = require("lodash");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
@@ -63,7 +63,6 @@ const product = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 3;
     const skip = page * limit - limit;
-
     const totalRows = await CommentModel
         .find({ prd_id: id })
         .sort({ _id: -1 })
@@ -96,6 +95,7 @@ const comment = async (req, res) => {
     const { full_name, email, body } = req.body;
     const { id } = req.params;
     const checkEmail = req.session.email;
+    const user = res.locals.user;
 
     const recaptchaToken = req.body["g-recaptcha-response"];
     if (!recaptchaToken) {
@@ -116,7 +116,7 @@ const comment = async (req, res) => {
     }
 
     //kiểm tra đăng nhập
-    if (!checkEmail) {
+    if (!checkEmail && !user.full_name) {
         return res.redirect(`${req.path}?error=Bạn cần đăng nhập để có thể bình luận`)
     }
     let checkBody = body;
@@ -220,7 +220,7 @@ const addToCart = async (req, res) => {
         newItems.push({
             id,
             name: product.name,
-            thumbnail: product.thumbnail,
+            thumbnails: product.thumbnails,
             price: product.price,
             qty: parseInt(qty)
         })
@@ -273,6 +273,7 @@ const order = async (req, res) => {
     const items = req.session.cart;
     const checkEmail = req.session.email; // lấy email từ session
     const { body } = req;
+    // const user = req.locals.user;
     const total_price = items.reduce((total, item) => total + item.price * item.qty, 0)
     const viewFolder = req.app.get("views");
     const html = await ejs.renderFile(path.join(viewFolder, "/site/email-order.ejs"), {
@@ -280,7 +281,6 @@ const order = async (req, res) => {
         items
     }
     );
-
     if (!checkEmail && checkEmail !== body.email) {    /// kiểm tra nếu ko có email lưu session và checkmail khác email người dùng nhập vào từ form
         error = "Bạn cần đăng nhập để có thể mua hàng!";
         return res.render("site/cart", { data: { error } })
@@ -307,7 +307,7 @@ const order = async (req, res) => {
         })),
         total_price,
     }
-    await oderModel(newOrder).save();
+    await OrderModel(newOrder).save();
     req.session.cart = [];
     return res.redirect("/success")
 }
@@ -356,7 +356,6 @@ const validateOtp = async (req,res)=>{
    const ValidOpt = req.session.optCode;
    const email = req.session.emailChanged;
    let error = "Mã Otp không chính xác"
-   console.log(ValidOpt);
    if(checkOtp != ValidOpt){
     return res.render("site/forgets/OTP",{data : {error},email})
    }else{
@@ -388,7 +387,32 @@ const changePassword = async (req,res)=>{
 
     await CustomerModel.updateOne({ email: email }, { $set: newUser });
     delete req.session.emailChanged;
-    return res.redirect("/admin/customers/login")
+    return res.redirect("/forget/success")
+}
+const forgetSuccess = (req,res)=>{
+    res.render("site/forgets/success")
+}
+
+const information = async(req,res)=>{
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = page * limit - limit;
+    let count = 1;
+    const totalRows = await OrderModel.find().countDocuments();
+    const totalPages = Math.ceil(totalRows / limit);
+
+    const orders = await OrderModel
+        .find()
+        .sort({ _id: -1 })
+        .skip(skip)
+        .limit(limit);
+    res.render("site/information",{
+        orders,
+        count,
+        totalPages,
+        page,
+        pages : pagination(page,limit,totalRows)
+    })
 }
 module.exports = {
     home,
@@ -409,6 +433,8 @@ module.exports = {
     validateEmail,
     validateOtp,
     changePassword,
+    forgetSuccess,
+    information,
 }
 
 

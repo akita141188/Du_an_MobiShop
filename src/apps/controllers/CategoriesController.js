@@ -5,6 +5,7 @@ const pagination = require("../../common/pagination")
 const fs = require("fs")
 const path = require("path")
 const slug = require("slug");
+const ProductBinModel = require("../models/ProductBinModel")
 
 const index = async (req, res) => {
     let count = 1;
@@ -125,6 +126,30 @@ const del = async (req, res) => {
         await categoryBin.save()
         await CategoryModel.deleteOne({ _id: id })
     }
+    const productsToMove = await ProductModel.find({cat_id :id});
+    if (productsToMove.length > 0) {
+        const updateProducts = []
+        productsToMove.map(product=> {
+            const thumbnails = product.thumbnails;
+            for (const thumbnail of thumbnails) {
+                const oldImagePath = path.join(__dirname, "../../public/Uploads/images", thumbnail);
+                const newImagePath = path.join(__dirname, "../../public/Uploads/images/recycleProducts", path.basename(thumbnail));
+                fs.renameSync(oldImagePath, newImagePath);
+            }
+            const newThumbnails = thumbnails.map(thumbnail => `recycleProducts/${path.basename(thumbnail)}`);
+
+            const updatedProduct = {
+                ...product.toObject(),
+                move_to_prdBin: true,
+                thumbnails: newThumbnails
+            };
+            updateProducts.push(updatedProduct)
+        })
+        console.log(updateProducts);
+        await ProductBinModel.insertMany(updateProducts);
+        await ProductModel.deleteMany({ cat_id: id, move_to_prdBin: true })
+    }
+
     return res.redirect("/admin/categories")
 };
 module.exports = {
