@@ -1258,3 +1258,48 @@ h1.page-header {
     filter: brightness(0) saturate(100%);
   }
 
+/* Logo social */
+/* logo social network */
+.btn-login {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.hor-line {
+  position: relative;
+  text-align: center;
+  margin: 20px auto;
+}
+
+.logo-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.btn-bgcolor {
+  background-color: #2de000a6;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #1b3548;
+  color: white;
+}
+
+.btn-bgcolor:hover,
+.btn-secondary:hover {
+  color: white;
+}
+
+.login-passport {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px auto;
+}
+
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

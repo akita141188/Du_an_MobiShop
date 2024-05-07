@@ -15,7 +15,7 @@ const RootRoute = require("../routers/RootRoute")
 const RecycleBinRoute = require("../routers/recycleBinRoute")
 const CustomerRoute = require("../routers/customerRoute")
 const SocialRoute = require("../routers/socialRoute")
-
+const SocialCusRoute = require("../routers/socialCusRoute")
 
 router.use("",SiteRoute);
 router.use("",AuthRoute);
@@ -31,6 +31,7 @@ router.use("",RootRoute);
 router.use("",RecycleBinRoute)
 router.use("",CustomerRoute)
 router.use("",SocialRoute)
+router.use("",SocialCusRoute)
 
 
 

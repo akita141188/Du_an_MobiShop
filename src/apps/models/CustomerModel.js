@@ -1,31 +1,37 @@
 const mongoose = require("../../common/database")();
 
-const customerSchema = new mongoose.Schema({
+const customerSchema = new mongoose.Schema(
+  {
     email: {
-        type: String,
-        unique: true,
-        required: true,
+      type: String,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true,
+      type: String,
     },
     full_name: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     address: {
-        type: String,
-        required: true,
+      type: String,
     },
     phone: {
-        type: String,
-        required: true,
+      type: String,
     },
-
-},{
-        timestamps: true,
-});
+    socialId: {
+      type: String,
+      default: null,
+    },
+    avatar: {
+      type: String,
+      default: null,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const customerModel = mongoose.model("Customers",customerSchema,"customer");
 module.exports = customerModel;

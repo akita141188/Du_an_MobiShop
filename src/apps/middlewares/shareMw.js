@@ -18,8 +18,8 @@ const shareMw = {
     next();
   },
   emailCustomer: async (req, res, next) => {
-    const { email } = req.session;
-    res.locals.customer = await CustomerModel.findOne({ email });
+    const { _id } = req.session;
+    res.locals.customer = await CustomerModel.findById(_id);
     next();
   },
   cartItems: async (req, res, next) => {
