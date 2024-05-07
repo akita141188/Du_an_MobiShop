@@ -35,8 +35,22 @@ const delAll = async (req,res)=>{
     await OrderModel.deleteMany({_id:{$in:checkedIds}})
     return res.redirect("/admin/orders")
 }
+
+const approved = async (req,res) => {
+    const {id} = req.params;
+    const { page } = req.query;
+    const order = await OrderModel.findById(id);
+    const approvedOrder = { confirmed : !order.confirmed}
+    if(approvedOrder){
+        await OrderModel.updateOne({_id:id},{$set:approvedOrder})
+    }
+    return res.redirect(`/admin/orders?page=${page}`)
+}
+
+
 module.exports = {
     index,
     del,
-    delAll
+    delAll,
+    approved,
 }

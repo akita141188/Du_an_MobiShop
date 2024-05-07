@@ -29,19 +29,19 @@
         <%} else { %>
           <% if (user) { %>
             <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-             <span style="color: rgb(0, 46, 247);">Thành viên</span> : <%=user.email !=="facebook@gmail.com" && user.email !=="github@gmail.com" ? user.email : user.full_name %>
+             <span style="color: rgb(255, 170, 0);">Thành viên</span> : <%=user.email !=="facebook@gmail.com" && user.email !=="github@gmail.com" ? user.email : user.full_name %>
             </button>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="/admin/dashboard">Trang quản trị</a>
-              <a class="dropdown-item" href="/information">Hồ sơ</a>
+              <a class="dropdown-item" href="/information/infoCustomer">Hồ sơ cá nhân</a>
               <a class="dropdown-item" href="/admin/logout">Đăng xuất</a>
             </div>
           <% } else if (customer && customer.email) { %>
             <img style="border-radius: 50%; " src="<%=customer.avatar%>" alt="">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"><span style="color: rgb(159, 254, 195);">Khách hàng: </span> <%= customer.full_name %>
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"><span style="color: rgb(255, 136, 0);">Khách hàng: </span> <%= customer.full_name %>
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="/information">Hồ sơ</a>
+              <a class="dropdown-item" href="/information/infoCustomer">Hồ sơ cá nhân</a>
               <a class="dropdown-item" href="/admin/customers/logout">Đăng xuất</a>
             </div>
           <% } %>

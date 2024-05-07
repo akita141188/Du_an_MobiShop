@@ -70,7 +70,9 @@
       <td rowspan="<%= order.items.length %>"><span><%= formatPrice(order.total_price) %></span></td>
       <td rowspan="<%= order.items.length %>" class="form-group">
         <%if(userValidate.role == "admin"){%>
-        <a href="javascript:void(0);" class="btn btn-danger" onclick="confirmDeleteOne('<%= order._id %>')"><i class="glyphicon glyphicon-remove"></i></a>
+          <a href= "/admin/orders/approved-<%=order._id%>" class="btn <%=order?.confirmed?'btn-success':'btn-warning'%>"><%=order?.confirmed?"Đã xác nhận":"Chưa xác nhận"%> <i class="glyphicon glyphicon-ok"></i></a>
+
+         <a href="javascript:void(0);" class="btn btn-danger" onclick="confirmDeleteOne('<%= order._id %>')"><i class="glyphicon glyphicon-remove"></i></a>
         <%}%>
                 </td>
                 <% } %>
@@ -79,6 +81,49 @@
       </td>
     </tr>
     <% } %>
+    <% } %>
+    </tbody>
+    </table>
+
+  </div>
+  <div class="panel-footer">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <%if(page>1){%>
+        <li class="page-item"><a class="page-link" href="/admin/orders?page=<%=page-1%>">&laquo;</a></li>
+        <%}%>
+                                <%for(let num of pages){%>
+        <%if(num==="..."){%>
+        <li class="page-item <%=page===num?'active':''%>"><span><%=num %></span></li>
+        <%} else {%>
+        <li class="page-item <%=page===num?'active':''%>"><a class="page-link" href="/admin/orders?page=<%=num%>"><%=num %></a></li>
+        <%}%>
+                                <%}%>
+        <%if(page < totalPages){%>
+        <li class="page-item"><a class="page-link" href="/admin/orders?page=<%=page+1%>">&raquo;</a></li>
+        <%}%>
+                            </ul>
+                        </nav>                    </div>
+				</div>
+			</div>
+		</div><!--/.row-->	
+	</div>	<!--/.main-->
+	<script>
+		// hàm cảnh báo xóa   
+		const confirmDeleteOne = (OrderId) => {
+		  const confirmMsg = "Bạn có chắc muốn xóa Đơn hàng này?";
+		  if (confirm(confirmMsg)) {
+			window.location.href = "/admin/orders/delete-" + OrderId;
+			location.reload();
+		  }
+		}
+	  </script>
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-table.js"></script>	
+
+    <%- include("../layout/footer")%>
+
     <script>
       // bắt sự kiện Thay đổi trạng thái checkbox
       document.querySelectorAll(".myCheckbox").forEach(checkbox => {
@@ -137,45 +182,3 @@
         }
       });
     </script>
-    <% } %>
-    </tbody>
-    </table>
-
-  </div>
-  <div class="panel-footer">
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <%if(page>1){%>
-        <li class="page-item"><a class="page-link" href="/admin/orders?page=<%=page-1%>">&laquo;</a></li>
-        <%}%>
-                                <%for(let num of pages){%>
-        <%if(num==="..."){%>
-        <li class="page-item <%=page===num?'active':''%>"><span><%=num %></span></li>
-        <%} else {%>
-        <li class="page-item <%=page===num?'active':''%>"><a class="page-link" href="/admin/orders?page=<%=num%>"><%=num %></a></li>
-        <%}%>
-                                <%}%>
-        <%if(page < totalPages){%>
-        <li class="page-item"><a class="page-link" href="/admin/orders?page=<%=page+1%>">&raquo;</a></li>
-        <%}%>
-                            </ul>
-                        </nav>                    </div>
-				</div>
-			</div>
-		</div><!--/.row-->	
-	</div>	<!--/.main-->
-	<script>
-		// hàm cảnh báo xóa   
-		const confirmDeleteOne = (OrderId) => {
-		  const confirmMsg = "Bạn có chắc muốn xóa Đơn hàng này?";
-		  if (confirm(confirmMsg)) {
-			window.location.href = "/admin/orders/delete-" + OrderId;
-			location.reload();
-		  }
-		}
-	  </script>
-	<script src="js/jquery-1.11.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-    <script src="js/bootstrap-table.js"></script>	
-
-    <%- include("../layout/footer")%>
