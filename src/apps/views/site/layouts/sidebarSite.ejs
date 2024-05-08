@@ -3,7 +3,7 @@
         <%for(let banner of banners){%>
             <%if(banner.status){%>
         <div class="banner-item">
-            <a href="#"><img class="img-fluid" src="../Uploads/images/<%=banner.image%>"></a>
+            <a href="<%=banner.urlBanner%>"><img class="img-fluid" src="../Uploads/images/<%=banner.image%>"></a>
         </div>
             <%}%>
         <%}%>

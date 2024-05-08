@@ -7,10 +7,11 @@ const upload = multer({
             cb(null,config.get("app.tmp"))
         },
         filename : (req,file,cb)=>{
-            const uniqueSuffix = Date.now();
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
             cb(null,uniqueSuffix + "-" + file.originalname)
         }
     }),
 })
+
 
 module.exports = upload;

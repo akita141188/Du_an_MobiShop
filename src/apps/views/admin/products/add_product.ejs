@@ -66,7 +66,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Ảnh sản phẩm</label>
-                      
+                                    <i>Chỉ upload được các ảnh có đuôi .jpg, .png, jpeg</i>
+                                    <%if(data && data.error){%>
+                                        <div class="alert alert-danger"><%=data.error%></div>
+                                        <%}%>
                                     <input type="file" multiple name="thumbnail" accept="images/*" onchange="previewImages(this)">
                                     <br>
                                     <div class="preview"></div>

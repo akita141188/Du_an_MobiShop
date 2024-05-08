@@ -67,8 +67,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Ảnh sản phẩm</label>
+                                    <i>Chỉ upload được các ảnh có đuôi .jpg, .png, .jpeg, .webp</i>
+                                    <%if(data && data.error){%>
+                                        <div class="alert alert-danger"><%=data.error%></div>
+                                        <%}%>
                       
-                                    <input type="file" multiple name="thumbnail" accept="images/*" onchange="previewImages(this)">
+                                    <input type="file" multiple name="thumbnail" accept="images/*" onchange="previewImages(this)" value="">
                                     <br>
                                     <div class="preview">
                                         <% product.thumbnails.forEach((thumbnail)=> { %>
@@ -165,13 +169,13 @@
                                     <label>Sản phẩm nổi bật</label>
                                     <div class="checkbox">
                                         <label>
-                                            <input <%= product.featured==1 && "checked" %> name="featured" type="checkbox" value=1>Nổi bật
+                                            <input  name="featured" type="checkbox" value="on" <%= product.featured== true && "checked" %>>Nổi bật
                                         </label>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                         <label>Mô tả sản phẩm</label>
-                                        <textarea required name="description" class="form-control" rows="3"></textarea>
+                                        <textarea required name="description" class="form-control" rows="3"><%=product.description%></textarea>
                                         <script>
                                             CKEDITOR.replace("description");
                                         </script>

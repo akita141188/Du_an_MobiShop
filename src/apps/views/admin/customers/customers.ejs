@@ -55,7 +55,6 @@
       <td><%=customer.phone%></td>
       <td class="form-group">
         <%if(userValidate.role == "admin"){%>
-        <a href="/admin/users/edit/<%=customer._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
         <a href="javascript:void(0);" class="btn btn-danger" onclick="confirmDeleteOne('<%= customer._id %>')"><i class="glyphicon glyphicon-remove"></i></a>
         <%}%>
                 </td>
