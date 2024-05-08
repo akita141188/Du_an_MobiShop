@@ -2,6 +2,7 @@ const BannerModel = require("../models/BannerModel");
 const fs = require("fs")
 const path = require("path")
 const pagination = require("../../common/pagination");
+const {isValidImageExtension} = require("../../libs/ValidImageExtension")
 
 const index = async (req, res) => {
     const limit = 5;
@@ -29,14 +30,20 @@ const index = async (req, res) => {
 };
 
 const create = async(req,res)=>{
-    res.render("admin/banners/add_banner")
+    res.render("admin/banners/add_banner",{data : {}})
 }
 
 const store = async(req,res)=>{
+    let error = "";
     const {body, file} = req;
 
     const banner = {
         name : body.name,
+        urlBanner : body.urlBanner,
+    }
+    if (!isValidImageExtension(file.originalname)) {
+        error = 'Ảnh không đúng định dạng (.jpg, .jpeg, .png, .webp)';
+        return res.render("admin/banners/add_banner", { data: { error } });
     }
     if(file){
         const image = `banners/${file.originalname}`
@@ -60,6 +67,7 @@ const update = async(req,res)=>{
 
     const banner = {
         name : body.name,
+        urlBanner : body.urlBanner,
     }
     if(file){
         const image = `banners/${file.originalname}`

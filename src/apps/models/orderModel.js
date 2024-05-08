@@ -1,6 +1,11 @@
 const mongoose = require("../../common/database")();
 
 const oderSchema = new mongoose.Schema({
+    customer_id: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Customers',
+        required: true
+      },
     full_name: {
         type: String,
         required: true,
@@ -40,8 +45,13 @@ const oderSchema = new mongoose.Schema({
             required: true,
         }
     }],
+    confirmed: {
+        type: Boolean,
+        default: false
+      },
+
 
 },{timestamps: true})
 
-const oderModel = mongoose.model("Oders", oderSchema, "oders")
+const oderModel = mongoose.model("Orders", oderSchema, "orders")
 module.exports = oderModel;

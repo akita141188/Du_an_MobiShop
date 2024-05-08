@@ -13,6 +13,10 @@ const bannerschema = new mongoose.Schema({
         type : Boolean,
         default : false
     },
+    urlBanner : {
+        type : String,
+        default : ""
+    }
 },{timestamps : true})
 
 const BannerModel = mongoose.model("Banners", bannerschema, "banners")

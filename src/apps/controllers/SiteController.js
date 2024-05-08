@@ -100,7 +100,7 @@ const comment = async (req, res) => {
     const recaptchaToken = req.body["g-recaptcha-response"];
     if (!recaptchaToken) {
 
-            return res.redirect(`${req.path}?error=Vui lòng xác nhận bạn không phải là robot`)
+        return res.redirect(`${req.path}?error=Vui lòng xác nhận bạn không phải là robot`)
 
     }
     const secretKey = "LeywLopAAAAAFhfLU_rPZybwu_hnbI5gEEEgmVf";
@@ -269,11 +269,11 @@ const delItemCart = (req, res) => {
 };
 
 const order = async (req, res) => {
+    const customer = res.locals.customer
     let error;
     const items = req.session.cart;
-    const checkEmail = req.session.email; // lấy email từ session
     const { body } = req;
-    // const user = req.locals.user;
+    const checkEmail = req.session.email; // lấy email từ session
     const total_price = items.reduce((total, item) => total + item.price * item.qty, 0)
     const viewFolder = req.app.get("views");
     const html = await ejs.renderFile(path.join(viewFolder, "/site/email-order.ejs"), {
@@ -293,8 +293,11 @@ const order = async (req, res) => {
         html, // html body
     })
 
+    // const customer = await CustomerModel.findById(id)
+    console.log(customer);
     // Tạo Oder để lưu vào Db
     const newOrder = {
+        customer_id: customer._id,
         full_name: body.full_name,
         email: body.email,
         phone: body.phone,
@@ -348,52 +351,53 @@ const validateEmail = async (req, res) => {
     })
     req.session.emailChanged = email;
 
-    return res.render("site/forgets/OTP", { email, data: { error },otp })
+    return res.render("site/forgets/OTP", { email, data: { error }, otp })
 }
 
-const validateOtp = async (req,res)=>{
-   const checkOtp = req.body.otp;
-   const ValidOpt = req.session.optCode;
-   const email = req.session.emailChanged;
-   let error = "Mã Otp không chính xác"
-   if(checkOtp != ValidOpt){
-    return res.render("site/forgets/OTP",{data : {error},email})
-   }else{
-    return res.render("site/forgets/ChangePassword",{email, data: {}})
-   }
+const validateOtp = async (req, res) => {
+    const checkOtp = req.body.otp;
+    const ValidOpt = req.session.optCode;
+    const email = req.session.emailChanged;
+    let error = "Mã Otp không chính xác"
+    if (checkOtp != ValidOpt) {
+        return res.render("site/forgets/OTP", { data: { error }, email })
+    } else {
+        return res.render("site/forgets/ChangePassword", { email, data: {} })
+    }
 }
 
 // thay doi password
-const changePassword = async (req,res)=>{
+const changePassword = async (req, res) => {
     const email = req.session.emailChanged;
     const { password, confirmPassword } = req.body;
     let error = null;
 
-    if(password !== confirmPassword){
+    if (password !== confirmPassword) {
         error = "Mật khẩu không khớp"
-        return res.render("site/forgets/ChangePassword",{email, data: {error}})
+        return res.render("site/forgets/ChangePassword", { email, data: { error } })
     }
 
-    const hash = await bcrypt.hash(password,7)
-    const user = await CustomerModel.findOne({email});
+    const hash = await bcrypt.hash(password, 7)
+    const user = await CustomerModel.findOne({ email });
 
     const newUser = {
-        email : user.email,
-        full_name : user.full_name,
-        address : user.address,
-        phone : user.phone,
-        password : hash,
+        email: user.email,
+        full_name: user.full_name,
+        address: user.address,
+        phone: user.phone,
+        password: hash,
     }
 
     await CustomerModel.updateOne({ email: email }, { $set: newUser });
     delete req.session.emailChanged;
     return res.redirect("/forget/success")
 }
-const forgetSuccess = (req,res)=>{
+const forgetSuccess = (req, res) => {
     res.render("site/forgets/success")
 }
 
-const information = async(req,res)=>{
+const informationOrders = async (req, res) => {
+    const id = req.session._id;
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     const skip = page * limit - limit;
@@ -402,18 +406,56 @@ const information = async(req,res)=>{
     const totalPages = Math.ceil(totalRows / limit);
 
     const orders = await OrderModel
-        .find()
+        .find({ customer_id: id })
         .sort({ _id: -1 })
         .skip(skip)
         .limit(limit);
-    res.render("site/information",{
+    res.render("site/information-orders", {
         orders,
         count,
         totalPages,
         page,
-        pages : pagination(page,limit,totalRows)
+        pages: pagination(page, limit, totalRows)
     })
 }
+const informationCustomer = async(req,res)=>{
+    const id = req.session._id;
+    const customer = await CustomerModel.findById(id);
+    console.log(customer);
+    
+    res.render("site/information-customer",{customer,data:{}})
+}
+
+const editInformationCustomer = async (req,res)=>{
+    const id = req.session._id;
+    const customer = await CustomerModel.findById(id);
+    console.log(customer);
+    
+    res.render("site/edit-information-customer",{customer,data:{}})
+}
+const updateInformationCustomer = async (req,res)=>{
+    const {body} = req;
+    const id = req.session._id;
+    const hashed = await bcrypt.hash(body.password,7)
+
+    const customer = await CustomerModel.findById(id);
+
+    let error = "";
+    if(body.password !== body.re_password){
+        error = "Mật khẩu không khớp"
+        return res.render("site/edit-information-customer",{customer,data:{error}})
+    }
+    const newCustomer = {
+        email : body.email,
+        full_name : body.full_name,
+        address : body.address,
+        phone : body.phone,
+        password : hashed,
+    }
+    await CustomerModel.updateOne({ _id: id }, { $set: newCustomer })
+    return res.redirect("/information/infoCustomer")
+}
+
 module.exports = {
     home,
     category,
@@ -434,7 +476,10 @@ module.exports = {
     validateOtp,
     changePassword,
     forgetSuccess,
-    information,
+    informationOrders,
+    informationCustomer,
+    editInformationCustomer,
+    updateInformationCustomer,
 }
 
 

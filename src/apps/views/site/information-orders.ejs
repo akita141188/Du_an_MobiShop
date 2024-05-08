@@ -7,7 +7,9 @@
 
 
   <!--/.row-->
-
+  <div style="margin-top: 20px; margin-bottom: 20px;">
+    <a href="/information/infoCustomer" class="btn btn-primary">Quay lại trang thông tin cá nhân</a>
+  </div>
   <div class="row">
     <div class="col-lg-12">
       <h1 class="page-header">Danh sách đơn hàng</h1>
@@ -18,39 +20,36 @@
     <div class="col-lg-12">
       <div class="panel panel-default">
         <div class="panel-body">
-          <table data-toolbar="#toolbar" data-toggle="table" border="2">
+          <% for (let order of orders) { %>
+
+          <table  data-toolbar="#toolbar" data-toggle="table" border="2">
             <thead>
               <tr>
-                <th class="col-lg-1" data-field="id" data-sortable="true">ID</th>
                 <th class="col-lg-2" data-field="product" data-sortable="true">Tên sản phẩm</th>
+                <th class="col-lg-1" data-field="thumbnail" data-sortable="true">Ảnh sản phẩm</th>
                 <th  class="col-lg-1"  data-field="quantity" data-sortable="true">Số lượng</th>
                 <th  class="col-lg-2" data-field="price" data-sortable="true">Đơn giá</th>
                 <th  class="col-lg-3" data-field="total" data-sortable="true">Tổng tiền</th>
-                <th  class="col-lg-3" data-field="action" data-sortable="true">Hành động</th>
               </tr>
             </thead>
             <tbody>
-              <% for (let order of orders) { %>
+                <span>Trạng thái đơn hàng : <b style="font-size: 20px;" class=" btn-<%=order.confirmed ?'success' :'warning'%>" ><%=order.confirmed ? "Đã xác nhận" : "Chưa xác nhận"%></b></span>
               <% for (let orderDetail of order.items) { %>
-              <tr>
-                <% if (orderDetail == order.items[0]) { %>
-                <td rowspan="<%= order.items.length %>"><%=count++%></td>
-                <% } %>
-                <td><span><%= orderDetail.name %></span></td>
+              <tr style="text-align: center;">
+                <td ><span ><%= orderDetail.name %></span></td>
+                <td><%=count++%></td>
                 <td><span><%= orderDetail.qty %></span></td>
-                <td><span><%= formatPrice(orderDetail.price) %></span></td>
+                <td style="text-align: right;"><span><%= formatPrice(orderDetail.price) %></span></td>
                 <% if (orderDetail == order.items[0]) { %>
-                <td rowspan="<%= order.items.length %>"><span><%= formatPrice(order.total_price) %></span></td>
+                <td style="text-align: right;" rowspan="<%= order.items.length %>"><span><%= formatPrice(order.total_price) %></span></td>
 
                 <% } %>
-                <td>
-                  <!-- Add action buttons here if needed -->
-                </td>
               </tr>
-              <% } %>
               <% } %>
             </tbody>
           </table>
+          <br>
+          <% } %>
 
         </div>
         <div class="panel-footer">
