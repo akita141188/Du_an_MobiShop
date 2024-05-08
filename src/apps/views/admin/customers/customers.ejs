@@ -80,7 +80,7 @@
   const confirmDeleteOne = (UserId) => {
     const confirmMsg = "Bạn có chắc muốn xóa User này?";
     if (confirm(confirmMsg)) {
-      window.location.href = "/admin/Users/delete/" + UserId;
+      window.location.href = "/admin/users/delete/" + UserId;
       location.reload();
     }
   }

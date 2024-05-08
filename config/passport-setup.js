@@ -53,7 +53,6 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET_CUS,
     },
     (accessToken, refreshToken, profile, done) => {
-            console.log(profile);
 
       CustomerModel.findOne({ socialId: profile.id }).then(
         (currentCustomer) => {

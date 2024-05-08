@@ -165,7 +165,7 @@ const showDeleteAlert = () => {
           const confirmDeleteOne = (ProductId) => {
             const confirmMsg = "Bạn có chắc muốn xóa sản phẩm này?";
             if (confirm(confirmMsg)) {
-              window.location.href = "/admin/Products/delete/" + ProductId;
+              window.location.href = "/admin/products/delete/" + ProductId;
               location.reload();
             }
           }

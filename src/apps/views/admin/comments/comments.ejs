@@ -57,7 +57,9 @@
                 <td><%=comment.prd_id && comment.prd_id.name%></td>
                 <td><span><%=comment.body%></span></td>
                 <td class="form-group">
-                  <a href="/admin/comments/approved-<%=comment._id%>?page=<%=page%>" class="btn <%=comment?.status?'btn-success':'btn-warning'%>"><%=comment?.status?"Đã duyệt":"Chưa duyệt"%> <i class="glyphicon glyphicon-ok"></i></a>
+                  <a href="/admin/comments/approve/<%=comment._id%>" class="btn <%=comment?.role?'btn-success':'btn-warning'%>"><%=comment?.role?"Đã Phê duyệt":"Chưa phê duyệt"%> <i class="glyphicon glyphicon-ok"></i></a>
+                  <a href="/admin/comments/edit/<%=comment._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                  <a onclick="deleteOne('<%=comment._id%>')"  class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                 </td>
               </tr>
               <script>
