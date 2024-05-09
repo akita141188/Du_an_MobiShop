@@ -1,6 +1,6 @@
            	<!--	Slider	-->
+			   <div class="row" style="padding: 15px;">
            	<div id="slide" class="carousel slide" data-ride="carousel">
-
            	  <!-- Indicators -->
            	  <ul class="carousel-indicators">
            	    <%for(let i=0; i< sliders.length; i++){%>
@@ -16,7 +16,7 @@
            	    <%for(let slider of sliders){%>
            	    <%if(slider.status){%>
            	    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-           	      <img class="d-block w-100" src="../Uploads/images/<%=slider.image%>" alt="Vietpro Academy">
+           	      <img style="border-radius: 10px;" class="d-block w-100" src="../Uploads/images/<%=slider.image%>" alt="Vietpro Academy">
            	    </div>
            	    <% index++; %>
            	    <%}%>
@@ -33,3 +33,9 @@
 
            	</div>
            	<!--	End Slider	-->
+			</div>
+			<div class="row">
+
+			   <div id="main" class="col-lg-8 col-md-12 col-sm-12">
+
+			

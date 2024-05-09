@@ -7,7 +7,7 @@
   <div class="alert alert-success" type="hidden"><%= successMessage %></div>
   <% } %>
 <div id="product">
-  <div id="product-head" class="row">
+  <div id="product-head" class="row" style="border-radius: 10px;">
     <div id="product-img" class="col-lg-6 col-md-6 col-sm-12">
       <!-- Hiển thị ảnh lớn ở trên -->
       <div class="carousel slide" id="carousel<%= product._id %>" data-ride="carousel">
@@ -63,14 +63,14 @@
       <% }%>
     </div>
   </div>
-  <div id="product-body" class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
+  <div id="product-body" class="row" style="border-radius: 10px;">
+    <div class="col-lg-12 col-md-12 col-sm-12" >
       <h3>Đánh giá về <%=product.name%></h3>
       <%- product.description%>
     </div>
   </div>
   <!--	Comment	-->
-  <div id="comment" class="row">
+  <div id="comment" class="row" style="border-radius: 10px;">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <script>
         const changeLargeImage = (productId, thumbnail) => {
@@ -111,7 +111,7 @@
             </div>
             <%}%>
 
-      <div class="form-group">
+      <div class="form-group" >
         <label>Nội dung:</label>
         <textarea name="body" id="com-body" required rows="8" class="form-control"></textarea>
       </div>
@@ -125,7 +125,7 @@
   <!--	End Comment	-->
 
   <!--	Comments List	-->
-  <div id="comments-list" class="row">
+  <div id="comments-list" class="row" style="border-radius: 10px;">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <%for(let comment of comments){%>
       <div class="comment-item">

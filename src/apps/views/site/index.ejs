@@ -5,7 +5,7 @@
 
 <!--	Feature Product	-->
 <div class="products">
-  <h3>Sản phẩm nổi bật</h3>
+  <h2 style="color: white">Sản phẩm nổi bật</h2>
   <div class="product-list card-deck">
     <% for(let item of featured) {%>
     <%- include("./component/product-item",{item})%>
@@ -17,7 +17,7 @@
 
 <!--	Latest Product	-->
 <div class="products">
-  <h3>Sản phẩm mới</h3>
+  <h2 style="color: white">Sản phẩm mới</h2>
   <div class="product-list card-deck">
     <% for(let item of latest){%>
     <%- include("./component/product-item",{item})%>
@@ -29,4 +29,5 @@
 </div>
 
 <%- include("./layouts/sidebarSite")%>
+
     <%- include("./layouts/footerSite")%>

@@ -2,15 +2,18 @@
     <div id="banner">
         <%for(let banner of banners){%>
             <%if(banner.status){%>
-        <div class="banner-item">
-            <a href="<%=banner.urlBanner%>"><img class="img-fluid" src="../Uploads/images/<%=banner.image%>"></a>
+        <div class="banner-item" style="border-radius: 10px;">
+            <a href="<%=banner.urlBanner%>"><img style="border-radius: 10px;" class="img-fluid" src="../Uploads/images/<%=banner.image%>"></a>
         </div>
             <%}%>
         <%}%>
 
     </div>
 </div>
-</div>
+<%- include("./newsSite/student.ejs")%>
+<%- include("./newsSite/payment.ejs")%>
+<%- include("./newsSite/brand.ejs")%>
+<%- include("./newsSite/news.ejs")%>
 </div>
 </div>
 <!--	End Body	-->
