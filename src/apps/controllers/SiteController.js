@@ -19,11 +19,11 @@ const home = async (req, res) => {
     const featured = await ProductModel
         .find({ featured: true })
         .sort({ _id: -1 })
-        .limit(6);
+        .limit(9);
     const latest = await ProductModel
         .find({ is_stock: true })
         .sort({ _id: -1 })
-        .limit(6)
+        .limit(9)
     res.render("site/index", {
         featured,
         latest,
@@ -32,7 +32,7 @@ const home = async (req, res) => {
 const category = async (req, res) => {
     const { id } = req.params;
     const page = parseInt(req.query.page) || 1;
-    const limit = 9;
+    const limit = 15;
     const skip = page * limit - limit;
 
     const totalRows = await ProductModel

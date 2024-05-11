@@ -5,7 +5,7 @@
 	font-size:13px;
 	color:#333;}
 body{
-	background:#E7ECF4;}	
+	background:rgb(2, 155, 202)}	
 #header{
 	background:#222;}	
 #logo, #search, #cart{
@@ -42,20 +42,27 @@ body{
 	text-align:center;}		
 #menu{
 	overflow:hidden;
-	background:#EB1F27;}
+	background:linear-gradient(red,blue);
+	border-radius: 10px;
+}
 #menu ul{
 	margin:0;}	
 .menu-item{
 	float:left;
 	list-style:none;
-	padding:10px;
-	border-right:1px solid #C60A11;}	
+	padding:15px 10px;
+	/* border-right:1px solid #C60A11; */
+}	
 .menu-item a{
 	color:#FFF;
+	font-weight: bold;
 	text-decoration:none;}
 .menu-item:hover{
-	background:#C60A11;
-	cursor:pointer;}
+	background:#0c49a5;
+	cursor:pointer;
+	border-radius: 10px;
+
+}
 #main, #sidebar{
 	margin-top:10px;}	
 	
@@ -70,15 +77,17 @@ body{
 	margin:0 -2.5px;}
 .product-item{
 	padding:10px;
-	margin:2.5px !important;}
+	margin:2.5px !important;
+	overflow: hidden; /* Ẩn bất kỳ phần nào của ảnh vượt ra ngoài phạm vi */
+	position: relative; /* Đặt vị trí tương đối cho khung chứa ảnh */
+}
 .product-item img{
 	width:130px;
 	height:180px;
 	opacity:1;
 	-webkit-transition: opacity 1s;
 	transition: opacity 1s;}	
-.product-item:hover img{
-	opacity:0.5 !important;}	
+	
 .product-item a{
 	color:#333;
 	text-decoration:none;
@@ -93,11 +102,24 @@ body{
 	flex-basis:32.6%;}
 	
 .banner-item{
-	margin-bottom:10px;}
+	margin-bottom:10px;
+	overflow: hidden; /* Ẩn bất kỳ phần nào của ảnh vượt ra ngoài phạm vi */
+	position: relative; /* Đặt vị trí tương đối cho khung chứa ảnh */
+}
+
+.banner-item:hover img{
+	transform: scale(1.1); /* Phóng to ảnh lên 110% khi hover vào */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Thêm đổ bóng cho ảnh */
+	transition: transform 0.3s ease; /* Thêm transition cho hiệu ứng mượt mà */
+    border-radius: 10px; /* Bo tròn góc của ảnh */
+}
+
 
 #footer-top{
 	margin-top:20px;
-	background:#FFF;}
+	background:#FFF;
+	/* border-top: 5px black; */
+}
 #logo-2, #address, #service, #hotline{
 	padding-top:20px;
 	padding-bottom:20px;}	
@@ -118,7 +140,34 @@ body{
 		white-space: pre-line;
 	  }
 	
-	
+.footer-color{
+	color: rgb(255, 254, 252);
+}
+
+#news-events-1 .img-fluid {
+    transition: transform 0.3s ease; /* Thêm transition cho hiệu ứng mượt mà */
+}
+
+/* Định nghĩa hiệu ứng khi hover vào ảnh */
+#news-events-1 .img-fluid:hover {
+    transform: scale(1.1); /* Phóng to ảnh lên 110% khi hover vào */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Thêm đổ bóng cho ảnh */
+}
+
+.product-item img {
+    transition: transform 0.3s ease; /* Thêm transition cho hiệu ứng mượt mà */
+    border-radius: 10px; /* Bo tròn góc của ảnh */
+}
+
+/* Định nghĩa hiệu ứng khi hover vào ảnh */
+.product-item:hover img {
+	transform: scale(1.05); /* Phóng to ảnh lên 110% khi hover vào */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Thêm đổ bóng cho ảnh */
+	transition: transform 0.3s ease; /* Thêm transition cho hiệu ứng mượt mà */
+    border-radius: 10px; /* Bo tròn góc của ảnh */
+}
+
+
 @media (max-width:992px){
 	#banner{
 		display:none;}
@@ -139,7 +188,8 @@ body{
 	.menu-item{
 		float:none;
 		border:none;
-		border-bottom:1px solid #C60A11;}
+		border-bottom:1px solid #C60A11;
+	}
 }
 @media (min-width:768px){
 	#menu{
