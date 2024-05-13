@@ -13,7 +13,7 @@ const productBinSchema = new mongoose.Schema({
     },
     cat_id: {
         type: mongoose.Types.ObjectId,
-        ref: "Categories",
+        ref: "CategoriesBin",
         required: true,
     },
     price: {

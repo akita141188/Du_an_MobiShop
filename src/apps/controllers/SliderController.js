@@ -34,7 +34,8 @@ const create = async(req,res)=>{
 const store = async(req,res)=>{
     const {body,file} = req;
     const slider = {
-        name : body.name 
+        name : body.name,
+        url: body.url 
     }
     if(file){
         const image = `sliders/${file.originalname}`
@@ -55,8 +56,10 @@ const update = async(req,res)=>{
     const {body,file} = req;
     const {id} = req.params;
     const slider = {
-        name : body.name
+        name : body.name,
+        url: body.url
     }
+    console.log(body);
     if(file){
         const image = `sliders/${file.originalname}`
         fs.renameSync(file.path,path.resolve("src/public/Uploads/images",image))

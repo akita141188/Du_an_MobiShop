@@ -145,7 +145,6 @@ const del = async (req, res) => {
             };
             updateProducts.push(updatedProduct)
         })
-        console.log(updateProducts);
         await ProductBinModel.insertMany(updateProducts);
         await ProductModel.deleteMany({ cat_id: id, move_to_prdBin: true })
     }

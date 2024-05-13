@@ -32,23 +32,12 @@
                                     <div class="preview">
                                         <img width="160" src="">
                                     </div>
-                                    <script>
-                                        function previewImage(input) {
-                                            const file = input.files[0];
-                                            if (file) {
-                                                const reader = new FileReader();
-                                                reader.onload = function(e) {
-                                                    const img = document.createElement("img");
-                                                    img.src = e.target.result;
-                                                    img.classList.add("preview-img");   
-                                                    // Xóa ảnh cũ trước khi thêm ảnh mới
-                                                    document.querySelector(".preview").innerHTML = "";
-                                                    document.querySelector(".preview").appendChild(img);
-                                                };
-                                                reader.readAsDataURL(file);
-                                            }
-                                        }
-                                    </script>
+                                </div class="form-group">
+                                <label>Liên kết quảng cáo</label>
+                                <i>Liên kết sẽ được kích hoạt khi người dùng ấn vào banner quảng cáo</i><br>
+                                <input required type="text" name="url" class="form-control" placeholder="ví dụ : https://fptshop.com.vn/dien-thoai/samsung-galaxy-s23-fe?dung-luong=128gb" >
+                                <div>
+   
                                 </div>
                             <button type="submit" name="sbm" class="btn btn-success">Thêm mới</button>
                             <button type="reset" class="btn btn-default">Làm mới</button>
@@ -60,3 +49,20 @@
 	</div>	<!--/.main-->	
 
     <%- include("../layout/footer")%>		
+    <script>
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.classList.add("preview-img");   
+                    // Xóa ảnh cũ trước khi thêm ảnh mới
+                    document.querySelector(".preview").innerHTML = "";
+                    document.querySelector(".preview").appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>

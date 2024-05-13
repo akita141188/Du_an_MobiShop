@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     },
     provider: {
       type: String,
-      default: "local",
+      default: "email",
     },
     socialId: {
       type: String,
