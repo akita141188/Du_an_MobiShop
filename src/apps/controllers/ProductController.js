@@ -91,7 +91,6 @@ const create = async (req, res) => {
 const store = async (req, res) => {
     let error = "";
     const { body, files } = req;
-    console.log(files);
 
     const thumbnails = [];
     const product =
@@ -164,8 +163,8 @@ const update = async (req, res) => {
     const { body, files } = req;
     const { id } = req.params;
     const product = await ProductModel.findById({ _id: id });
-    let error = ""
-    const thumbnails = [];
+    let error = "";
+    const thumbnails = product.thumbnails;
     const newProduct =
     {
         name: body.name,
@@ -197,7 +196,6 @@ const update = async (req, res) => {
         files.forEach(file => {
             const uniqueSuffix = Date.now();
             const thumbnail = `products/${uniqueSuffix + "-" + file.originalname}`
-            console.log(file.originalname);
             fs.renameSync(file.path, path.resolve("src/public/Uploads/images", thumbnail))
             thumbnails.push(thumbnail)
         })

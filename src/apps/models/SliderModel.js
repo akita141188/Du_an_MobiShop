@@ -13,6 +13,10 @@ const sliderSchema = new mongoose.Schema({
         type : Boolean,
         default : false
     },
+    url: {
+        type : String,
+        default : ""
+    }
 },{timestamps : true})
 
 const SliderModel = mongoose.model("Sliders", sliderSchema, "sliders")

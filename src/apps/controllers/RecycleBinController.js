@@ -15,6 +15,9 @@ const products = async (req, res) => {
         .find()
         .populate({ path: "cat_id" })
         .sort({ _id: -1 });
+        console.log(productsBin);
+    const categoriesBin = await CategoryBinModel.find();
+    console.log(categoriesBin);
     res.render("admin/recycle_bin/products_bin", {
         count,
         productsBin,
