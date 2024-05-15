@@ -73,87 +73,7 @@
                                     <input type="file" multiple name="thumbnail" accept="images/*" onchange="previewImages(this)">
                                     <br>
                                     <div class="preview"></div>
-                      
-                                    <script>
-                                      let fileData = []; // Mảng lưu trữ dữ liệu của các file
-                      
-                                      function previewImages(input) {
-                                        const files = input.files;
-                                        const previewDiv = document.querySelector(".preview");
-                      
-                                        if (files) {
-                                          for (let i = 0; i < files.length; i++) {
-                                            const file = files[i];
-                                            const reader = new FileReader();
-                                            reader.onload = function(e) {
-                                              const img = document.createElement("img");
-                                              img.src = e.target.result;
-                                              img.classList.add("preview");
-                                              img.style.maxWidth = '150px';
-                                              img.style.maxHeight = '150px';
-                      
-                                              // Hiển thị ảnh xem trước đã uploads
-                                              const fileName = document.createElement("span");
-                                              fileName.innerHTML = file.name;
-                                              fileName.classList.add("file-name");
-                      
-                                              // Tạo biểu tượng "x" để xóa ảnh
-                                              const deleteIcon = document.createElement("span");
-                                              deleteIcon.innerHTML = "&times;";
-                                              deleteIcon.classList.add("delete-icon");
-                                              deleteIcon.onclick = function() {
-                                                // Xác định index của ảnh trong mảng fileData
-                                                const index = parseInt(imageContainer.getAttribute('data-index'));
-                      
-                                                // Xóa ảnh trong phần xem trước
-                                                previewDiv.removeChild(imageContainer);
-                      
-                                                // Xóa dữ liệu ảnh trong mảng fileData
-                                                fileData.splice(index, 1);
-                      
-                                                // Cập nhật số lượng file trên thanh input
-                                                input.files = new FileListToArray(fileData);
-                      
-                                                // Gửi yêu cầu xóa ảnh đến máy chủ (nếu cần)
-                      
-                                                // Đảm bảo rằng vị trí index của các ảnh trong mảng fileData là chính xác
-                                                refreshImageContainers();
-                                              };
-                      
-                                              // Tạo một container cho ảnh, tên tệp và biểu tượng xóa
-                                              const imageContainer = document.createElement("div");
-                                              imageContainer.classList.add("image-container");
-                                              imageContainer.appendChild(img);
-                                              imageContainer.appendChild(fileName);
-                                              imageContainer.appendChild(deleteIcon);
-                      
-                                              // Thêm thuộc tính data-index để lưu vị trí của ảnh trong mảng fileData
-                                              imageContainer.setAttribute('data-index', fileData.length);
-                      
-                                              // Lưu dữ liệu ảnh vào mảng fileData
-                                              fileData.push(file);
-                      
-                                              // Hiển thị ảnh và biểu tượng xóa
-                                              previewDiv.appendChild(imageContainer);
-                                            };
-                                            reader.readAsDataURL(file);
-                                          }
-                                        }
-                      
-                                      }
-                                      // Hàm chuyển đổi FileList sang mảng
-                                      function FileListToArray(fileList) {
-                                        return Array.prototype.slice.call(fileList);
-                                      }
-                      
-                                      // Hàm cập nhật vị trí index của các ảnh trong mảng fileData
-                                      function refreshImageContainers() {
-                                        const imageContainers = document.querySelectorAll('.image-container');
-                                        imageContainers.forEach((container, index) => {
-                                          container.setAttribute('data-index', index);
-                                        });
-                                      }
-                                    </script>
+
                                   </div>
 
                                 
@@ -181,6 +101,85 @@
                     </div>
                 </div><!-- /.col-->
             </div><!-- /.row -->
-		
 	</div>	<!--/.main-->	
     <%- include("../layout/footer")%>		
+
+    <script>
+        let fileData = []; // Mảng lưu trữ dữ liệu của các file
+
+        function previewImages(input) {
+          const files = input.files;
+          const previewDiv = document.querySelector(".preview");
+
+          if (files) {
+            for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.classList.add("preview");
+                img.style.maxWidth = '150px';
+                img.style.maxHeight = '150px';
+
+                // Hiển thị ảnh xem trước đã uploads
+                const fileName = document.createElement("span");
+                fileName.innerHTML = file.name;
+                fileName.classList.add("file-name");
+
+                // Tạo biểu tượng "x" để xóa ảnh
+                const deleteIcon = document.createElement("span");
+                deleteIcon.innerHTML = "&times;";
+                deleteIcon.classList.add("delete-icon");
+                deleteIcon.onclick = function() {
+                  // Xác định index của ảnh trong mảng fileData
+                  const index = parseInt(imageContainer.getAttribute('data-index'));
+
+                  // Xóa ảnh trong phần xem trước
+                  previewDiv.removeChild(imageContainer);
+
+                  // Xóa dữ liệu ảnh trong mảng fileData
+                  fileData.splice(index, 1);
+
+                  // Cập nhật số lượng file trên thanh input
+                  input.files = new FileListToArray(fileData);
+
+                  // Gửi yêu cầu xóa ảnh đến máy chủ (nếu cần)
+
+                  // Đảm bảo rằng vị trí index của các ảnh trong mảng fileData là chính xác
+                  refreshImageContainers();
+                };
+
+                // Tạo một container cho ảnh, tên tệp và biểu tượng xóa
+                const imageContainer = document.createElement("div");
+                imageContainer.classList.add("image-container");
+                imageContainer.appendChild(img);
+                imageContainer.appendChild(fileName);
+                imageContainer.appendChild(deleteIcon);
+
+                // Thêm thuộc tính data-index để lưu vị trí của ảnh trong mảng fileData
+                imageContainer.setAttribute('data-index', fileData.length);
+
+                // Lưu dữ liệu ảnh vào mảng fileData
+                fileData.push(file);
+                // Hiển thị ảnh và biểu tượng xóa
+                previewDiv.appendChild(imageContainer);
+              };
+              reader.readAsDataURL(file);
+            }
+          }
+
+        }
+        // Hàm chuyển đổi FileList sang mảng
+        function FileListToArray(fileList) {
+          return Array.prototype.slice.call(fileList);
+        }
+
+        // Hàm cập nhật vị trí index của các ảnh trong mảng fileData
+        function refreshImageContainers() {
+          const imageContainers = document.querySelectorAll('.image-container');
+          imageContainers.forEach((container, index) => {
+            container.setAttribute('data-index', index);
+          });
+        }
+      </script>

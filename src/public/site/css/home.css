@@ -5,7 +5,7 @@
 	font-size:13px;
 	color:#333;}
 body{
-	background:rgb(2, 155, 202)}	
+	background:#e7e8ec}	
 #header{
 	background:#222;}	
 #logo, #search, #cart{
@@ -141,7 +141,7 @@ body{
 	  }
 	
 .footer-color{
-	color: rgb(255, 254, 252);
+	color: rgb(0, 0, 0);
 }
 
 #news-events-1 .img-fluid {
@@ -151,7 +151,7 @@ body{
 /* Định nghĩa hiệu ứng khi hover vào ảnh */
 #news-events-1 .img-fluid:hover {
     transform: scale(1.1); /* Phóng to ảnh lên 110% khi hover vào */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Thêm đổ bóng cho ảnh */
+    box-shadow: 0 0 10px rgba(46, 46, 46, 0.3); /* Thêm đổ bóng cho ảnh */
 }
 
 .product-item img {
