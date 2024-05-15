@@ -98,78 +98,6 @@
         <%}%>
           </td>
         </tr>
-        <script>
-          // thay đổi kick thước ảnh
-          const changeLargeImage = (productId, thumbnail) => {
-              $(`#carousel${productId} .carousel-inner`).html(`<div class="carousel-item active"><img src="../Uploads/images/${thumbnail}" class="d-block mx-auto width="mx-auto" height="200 " w-50" alt="Large Slide"></div>`);
-          }
-      </script>
-        <script>
-          // bắt sự kiện Thay đổi trạng thái checkbox
-          document.querySelectorAll(".myCheckbox").forEach(checkbox => {
-            checkbox.addEventListener("change", () => {
-              updateCheckedIds();
-            });
-          });
-
-           const updateCheckedIds = () => {
-            const checkedIds = [];
-            document.querySelectorAll(".myCheckbox:checked").forEach(checkbox => {
-              checkedIds.push(checkbox.getAttribute("data-id"));
-            });
-            sendCheckedIds(checkedIds);
-          }
-          // Gửi yêu cầu về server (AJAX)
-          const sendCheckedIds = (checkedIds) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/admin/products/deleteAll", true); // open() nhận vào 3 tham số (phương thức, url xử lý, async). true: bất đồng bộ
-            xhr.setRequestHeader("Content-Type", "application/json"); // dữ liệu gửi về dạng JSON
-            xhr.send(JSON.stringify({
-              checkedIds: checkedIds
-            }));
-          }
-          // Thêm hàm hiển thị hộp thoại xác nhận
-          const confirmDelete = () => {
-            return confirm("Bạn có chắc chắn muốn xóa các sản phẩm đã chọn? Sản phẩm sẽ được chuyển đến thùng rác.");
-          }
-          
-// hiển thị thông báo khi xóa ko checked
-const showDeleteAlert = () => {
-        const deleteAlert = document.getElementById("deleteAlert");
-        deleteAlert.style.display = "block";
-
-        // Ẩn thông báo sau một khoảng thời gian
-        setTimeout(() => {
-          deleteAlert.style.display = "none";
-        }, 1000); // 3 giây
-      };
-
-      // Bắt sự kiện click nút Xóa đã chọn
-      document.getElementById("deleteSelected").addEventListener("click", () => {
-        const checkedCheckboxes = document.querySelectorAll(".myCheckbox:checked");
-
-        if (checkedCheckboxes.length === 0) {
-          // Nếu không có mục nào được chọn, hiển thị thông báo
-          showDeleteAlert();
-        } else {
-          // Nếu có mục được chọn, xác nhận hành động xóa
-          if (confirmDelete()) {
-            updateCheckedIds();
-            location.reload(); // sau khi xóa reload trang
-          }
-        }
-      });
-        </script>
-        <script>
-          // hàm cảnh báo xóa   
-          const confirmDeleteOne = (ProductId) => {
-            const confirmMsg = "Bạn có chắc muốn xóa sản phẩm này?";
-            if (confirm(confirmMsg)) {
-              window.location.href = "/admin/Products/delete/" + ProductId;
-              location.reload();
-            }
-          }
-        </script>
         <%}%>
 
         </tbody>
@@ -206,3 +134,77 @@ const showDeleteAlert = () => {
     <script type="module" src="js/ct-scripts-admin/script_index.js"></script>
 
     <%- include("../layout/footer")%>
+
+        <script>
+          // thay đổi kick thước ảnh
+          const changeLargeImage = (productId, thumbnail) => {
+            $(`#carousel${productId} .carousel-inner`).html(`<div class="carousel-item active"><img src="../Uploads/images/${thumbnail}" class="d-block mx-auto width="mx-auto" height="200 " w-50" alt="Large Slide"></div>`);
+          }
+        </script>
+
+        <script>
+          // bắt sự kiện Thay đổi trạng thái checkbox
+          document.querySelectorAll(".myCheckbox").forEach(checkbox => {
+            checkbox.addEventListener("change", () => {
+              updateCheckedIds();
+            });
+          });
+
+          const updateCheckedIds = () => {
+            const checkedIds = [];
+            document.querySelectorAll(".myCheckbox:checked").forEach(checkbox => {
+              checkedIds.push(checkbox.getAttribute("data-id"));
+            });
+            sendCheckedIds(checkedIds);
+          }
+          // Gửi yêu cầu về server (AJAX)
+          const sendCheckedIds = (checkedIds) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/admin/products/deleteAll", true); // open() nhận vào 3 tham số (phương thức, url xử lý, async). true: bất đồng bộ
+            xhr.setRequestHeader("Content-Type", "application/json"); // dữ liệu gửi về dạng JSON
+            xhr.send(JSON.stringify({
+              checkedIds: checkedIds
+            }));
+          }
+          // Thêm hàm hiển thị hộp thoại xác nhận
+          const confirmDelete = () => {
+            return confirm("Bạn có chắc chắn muốn xóa các sản phẩm đã chọn? Sản phẩm sẽ được chuyển đến thùng rác.");
+          }
+
+          // hiển thị thông báo khi xóa ko checked
+          const showDeleteAlert = () => {
+            const deleteAlert = document.getElementById("deleteAlert");
+            deleteAlert.style.display = "block";
+
+            // Ẩn thông báo sau một khoảng thời gian
+            setTimeout(() => {
+              deleteAlert.style.display = "none";
+            }, 1000); // 3 giây
+          };
+
+          // Bắt sự kiện click nút Xóa đã chọn
+          document.getElementById("deleteSelected").addEventListener("click", () => {
+            const checkedCheckboxes = document.querySelectorAll(".myCheckbox:checked");
+
+            if (checkedCheckboxes.length === 0) {
+              // Nếu không có mục nào được chọn, hiển thị thông báo
+              showDeleteAlert();
+            } else {
+              // Nếu có mục được chọn, xác nhận hành động xóa
+              if (confirmDelete()) {
+                updateCheckedIds();
+                location.reload(); // sau khi xóa reload trang
+              }
+            }
+          });
+        </script>
+        <script>
+          // hàm cảnh báo xóa   
+          const confirmDeleteOne = (ProductId) => {
+            const confirmMsg = "Bạn có chắc muốn xóa sản phẩm này?";
+            if (confirm(confirmMsg)) {
+              window.location.href = "/admin/Products/delete/" + ProductId;
+              location.reload();
+            }
+          }
+        </script>

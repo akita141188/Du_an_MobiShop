@@ -120,13 +120,6 @@ const store = async (req, res) => {
             return res.render("admin/products/add_product", { catogories, data: { error } });
         }
     }
-    // Kiểm tra số lượng tệp tin tải lên
-    // if (files && files.length > 6) {
-    //     error = 'Không được phép tải lên nhiều hơn 6 tệp ảnh.';
-    //     return res.render("admin/products/add_product", { catogories, data: { error } });
-    // }
-
-
     if (files) {
         files.map(file => {
             const uniqueSuffix = Date.now();
