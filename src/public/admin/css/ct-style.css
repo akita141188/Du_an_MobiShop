@@ -216,6 +216,7 @@
     text-transform: capitalize;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     overflow: hidden;
+  
     transition: 0.2s all;
     transform: scaleY(0);
     transform-origin: top;
