@@ -15,7 +15,7 @@
     <a style="color: white; " href="/admin/customers/login">Đăng nhập</a>
     <%} else { %>
       <% if (user) { %>
-        <button class="btn dropdown-toggle" style="background: #00483d;" type="button" data-toggle="dropdown" aria-expanded="false">
+        <button class="btn dropdown-toggle" style="background: #00483d;color: rgb(255, 255, 255)" type="button" data-toggle="dropdown" aria-expanded="false">
          <span style="color: rgb(255, 255, 255);">Thành viên</span> : <%=user.email !=="facebook@gmail.com" && user.email !=="github@gmail.com" ? user.email : user.full_name %>
         </button>
         <div class="dropdown-menu">

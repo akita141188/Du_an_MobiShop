@@ -157,7 +157,7 @@ const update = async (req, res) => {
     const { id } = req.params;
     const product = await ProductModel.findById({ _id: id });
     let error = "";
-    const thumbnails = product.thumbnails;
+    const thumbnails = [];
     const newProduct =
     {
         name: body.name,
